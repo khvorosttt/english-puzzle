@@ -1,5 +1,5 @@
 import LoginView from './View/Login/LoginView';
-import { isNull } from './base-methods';
+import StartPageView from './View/StartPage/StartPageView';
 
 export default class App {
     container: HTMLElement;
@@ -10,8 +10,13 @@ export default class App {
     }
 
     createView() {
-        const login = new LoginView();
-        isNull(login.container);
-        this.container.append(login.container);
+        const userInfo: string | null = localStorage.getItem('user');
+        if (userInfo) {
+            const startPage: StartPageView = new StartPageView();
+            this.container.append(startPage.container);
+        } else {
+            const login = new LoginView();
+            this.container.append(login.container);
+        }
     }
 }

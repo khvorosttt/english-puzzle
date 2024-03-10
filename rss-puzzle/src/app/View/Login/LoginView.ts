@@ -36,7 +36,7 @@ const surnameLabel = {
 };
 
 export default class LoginView {
-    container: HTMLElement | null;
+    container: HTMLElement;
 
     constructor() {
         this.container = document.createElement('div');
@@ -47,9 +47,9 @@ export default class LoginView {
 
     static createForm(id: string, text: string, classes: string[]) {
         const form: Component = new Component('form', id, text, classes);
-        const formName: HTMLHeadElement = new Component('h1', '', 'Log in', [
+        const formName: HTMLHeadingElement = new Component('h1', '', 'Log in', [
             'login-name',
-        ]).getContainer<HTMLHeadElement>();
+        ]).getContainer<HTMLHeadingElement>();
         const nameBox = LoginView.createNameBox(nameInfo, nameLabel, ['nameBox']);
         const surnameBox = LoginView.createNameBox(surnameInfo, surnameLabel, ['surnameBox']);
         const button = LoginView.createButton('login-button', 'Login', ['login-button']);

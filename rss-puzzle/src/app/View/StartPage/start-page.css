@@ -1,0 +1,30 @@
+.start-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: url(../../../imgs/startPage-background-2.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.start-wrapper {
+    width: 60%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.game-name {
+    color: #161110;
+    font-size: 50px;
+}
+
+.game-info {
+    font-size: 26px;
+}

@@ -1,4 +1,4 @@
-interface UserType {
+export interface UserType {
     nameUser: string;
     surnameUser: string;
 }

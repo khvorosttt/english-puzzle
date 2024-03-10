@@ -5,6 +5,9 @@
     width: 100vw;
     height: 100vh;
     background: url(../../../imgs/login-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
 }
 
 .login-form {
