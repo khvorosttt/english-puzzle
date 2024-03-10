@@ -2,11 +2,10 @@
   "name": "rss-puzzle",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
-    "build": "webpack --config ./webpack.config.js --env mode=prod",
+    "start": "webpack-dev-server",
+    "build": "SET NODE_ENV='production' && webpack",
     "format": "prettier . --write",
     "ci:format": "prettier . --check",
     "lint": "eslint . --ext .ts",

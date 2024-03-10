@@ -1,0 +1,40 @@
+.login-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: url(../../imgs/login-background.jpg);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    background: white;
+    width: 500px;
+    height: 500px;
+    border-radius: 50px;
+}
+
+.nameBox,
+.surnameBox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 70px;
+    width: 300px;
+}
+
+.error-name-msg,
+.error-surname-msg {
+    color: red;
+    height: 10px;
+}
+
+.name-input,
+.surname-input {
+    height: 25px;
+}
