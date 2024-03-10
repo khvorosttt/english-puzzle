@@ -1,4 +1,14 @@
+interface UserType {
+    nameUser: string;
+    surnameUser: string;
+}
+
 export default class ValidationForm {
+    static user: UserType = {
+        nameUser: '',
+        surnameUser: '',
+    };
+
     static invalidListenner(element: HTMLInputElement) {
         if (element.validity.valueMissing) {
             element.setCustomValidity('Is a required input field');
@@ -16,10 +26,27 @@ export default class ValidationForm {
             errorLabel.textContent +=
                 'Start typing with a capital letter. Acceptable characters are the English alphabet and the «-» symbol.';
         }
+        if (element.checkValidity()) {
+            if (element.id === 'name') {
+                ValidationForm.user.nameUser = element.value;
+            } else if (element.id === 'surname') {
+                ValidationForm.user.surnameUser = element.value;
+            }
+        }
     }
 
     static setInputListeners(element: HTMLInputElement, label: HTMLLabelElement) {
         element.addEventListener('invalid', () => ValidationForm.invalidListenner(element));
         element.addEventListener('input', () => ValidationForm.inputListenner(element, label));
+    }
+
+    static formListener(event: Event) {
+        event.preventDefault();
+        localStorage.clear();
+        localStorage.setItem('user', JSON.stringify(ValidationForm.user));
+    }
+
+    static setFormListeners(form: HTMLFormElement) {
+        form.addEventListener('submit', (event: Event) => ValidationForm.formListener(event));
     }
 }

@@ -54,7 +54,9 @@ export default class LoginView {
         const surnameBox = LoginView.createNameBox(surnameInfo, surnameLabel, ['surnameBox']);
         const button = LoginView.createButton('login-button', 'Login', ['login-button']);
         form.setChildren(formName, nameBox, surnameBox, button);
-        return form.getContainer<HTMLFormElement>();
+        const formContainer: HTMLFormElement = form.getContainer<HTMLFormElement>();
+        ValidationForm.setFormListeners(formContainer);
+        return formContainer;
     }
 
     static createNameBox(name: Info, label: Pick<Info, 'text' | 'classes'>, classes: string[]) {
@@ -92,6 +94,7 @@ export default class LoginView {
 
     static createButton(id: string, text: string, classes: string[]) {
         const button: Component = new Component('button', id, text, classes);
-        return button.getContainer<HTMLButtonElement>();
+        const buttonContainer: HTMLButtonElement = button.getContainer<HTMLButtonElement>();
+        return buttonContainer;
     }
 }
