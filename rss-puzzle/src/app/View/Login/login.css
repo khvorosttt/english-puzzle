@@ -4,7 +4,7 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
-    background: url(../../imgs/login-background.jpg);
+    background: url(../../../imgs/login-background.jpg);
 }
 
 .login-form {
@@ -23,9 +23,9 @@
 .surnameBox {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    height: 70px;
-    width: 300px;
+    gap: 15px;
+    height: 90px;
+    width: 370px;
 }
 
 .error-name-msg,
