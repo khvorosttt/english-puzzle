@@ -25,6 +25,7 @@ export default class ValidationForm {
         } else if (element.validity.patternMismatch) {
             errorLabel.textContent +=
                 'Start typing with a capital letter. Acceptable characters are the English alphabet and the «-» symbol.';
+            element.setCustomValidity(' ');
         }
         if (element.checkValidity()) {
             if (element.id === 'name') {
