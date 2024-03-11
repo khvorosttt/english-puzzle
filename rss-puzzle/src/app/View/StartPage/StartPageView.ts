@@ -1,4 +1,6 @@
+import { isNull } from '../../base-methods';
 import Component from '../../utils/base-component';
+import { UserType } from '../Validation/Validation';
 import './start-page.css';
 
 const GAMEINFO = {
@@ -13,6 +15,9 @@ export default class StartPageView {
     }
 
     static createContainer() {
+        const userString: string | null = localStorage.getItem('user');
+        isNull(userString);
+        const user: UserType = JSON.parse(userString);
         const component: Component = new Component('div', '', '', ['start-page-container']);
         const wrapper: Component = StartPageView.createWrapper('', '', ['start-wrapper']);
         const gameName: HTMLHeadingElement = new Component('h1', '', 'English Puzzle', [
@@ -21,7 +26,12 @@ export default class StartPageView {
         const gameInfo: HTMLDivElement = StartPageView.createWrapper('', GAMEINFO.INFO, [
             'game-info',
         ]).getContainer<HTMLDivElement>();
-        wrapper.setChildren(gameName, gameInfo);
+        const greetingContainer: HTMLDivElement = StartPageView.createWrapper(
+            '',
+            `Hello, ${user.nameUser} ${user.surnameUser}! Welcome to the game.`,
+            ['greeting-container']
+        ).getContainer<HTMLDivElement>();
+        wrapper.setChildren(gameName, gameInfo, greetingContainer);
         component.setChildren(wrapper.getContainer<HTMLDivElement>());
         return component.getContainer<HTMLDivElement>();
     }

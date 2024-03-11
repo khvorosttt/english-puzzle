@@ -11,13 +11,15 @@
 }
 
 .start-wrapper {
-    width: 60%;
-    height: 80%;
+    width: 650px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 50px;
+    background-color: rgb(255, 255, 255, 0.4);
+    border-radius: 50px;
 }
 
 .game-name {
@@ -25,6 +27,10 @@
     font-size: 50px;
 }
 
-.game-info {
-    font-size: 26px;
+.game-info,
+.greeting-container {
+    font-size: 30px;
+    color: #2d2120;
+    text-align: center;
+    margin: 0 30px;
 }
