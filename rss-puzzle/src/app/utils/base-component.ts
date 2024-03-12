@@ -6,9 +6,9 @@ interface CallBackParam {
 }
 
 export default class Component {
-    container: HTMLElement;
+    protected container: HTMLElement;
 
-    constructor(tag: string, id: string, text: string = '', classes?: string[], callback?: CallBackParam) {
+    constructor(tag: string, id?: string, text: string = '', classes?: string[], callback?: CallBackParam) {
         this.container = Component.createComponent(tag);
         this.setId(id);
         this.setTextContent(text);
@@ -25,7 +25,7 @@ export default class Component {
         return component;
     }
 
-    setId(id: string) {
+    setId(id?: string) {
         if (id) {
             this.container.id = id;
         }

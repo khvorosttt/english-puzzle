@@ -34,3 +34,20 @@
     text-align: center;
     margin: 0 30px;
 }
+
+.start-button {
+    width: 150px;
+    height: 70px;
+    border-radius: 15px;
+    font-size: 30px;
+    background-color: #bf82c5;
+    border: 1px solid #58244f;
+    color: #58244f;
+}
+
+.start-button:hover {
+    background-color: #7e4c9e;
+    border: 1px solid #f5b7ae;
+    color: #f5b7ae;
+    cursor: pointer;
+}
