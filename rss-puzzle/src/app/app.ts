@@ -3,6 +3,7 @@ import StartPageView from './View/StartPage/StartPageView';
 import { isNull } from './base-methods';
 import GamePageView from './View/GamePageView/GamePageView';
 import { PageInfo, Router } from './Router/Router';
+import LoginView from './View/Login/LoginView';
 
 export default class App {
     container: HTMLElement;
@@ -27,6 +28,13 @@ export default class App {
 
     initPages() {
         const pages: PageInfo[] = [
+            {
+                pagePath: 'login',
+                callback: () => {
+                    const loginView = new LoginView(this.router);
+                    this.setView(loginView);
+                },
+            },
             {
                 pagePath: 'start',
                 callback: () => {

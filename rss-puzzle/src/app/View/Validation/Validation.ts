@@ -1,3 +1,5 @@
+import { Router } from '../../Router/Router';
+
 export interface UserType {
     nameUser: string;
     surnameUser: string;
@@ -41,13 +43,14 @@ export default class ValidationForm {
         element.addEventListener('input', () => ValidationForm.inputListenner(element, label));
     }
 
-    static formListener(event: Event) {
+    static formListener(event: Event, router: Router) {
         event.preventDefault();
         localStorage.clear();
         localStorage.setItem('user', JSON.stringify(ValidationForm.user));
+        router.navigate('start');
     }
 
-    static setFormListeners(form: HTMLFormElement) {
-        form.addEventListener('submit', (event: Event) => ValidationForm.formListener(event));
+    static setFormListeners(form: HTMLFormElement, router: Router) {
+        form.addEventListener('submit', (event: Event) => ValidationForm.formListener(event, router));
     }
 }

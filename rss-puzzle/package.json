@@ -12,7 +12,7 @@
     "prepare": "cd .. && husky rss-puzzle/.husky"
   },
   "validate-branch-name": {
-    "pattern": "^(feat|fix|chore|docs)\/RSS-PZ-(\\d\\d)_\\w+$",
+    "pattern": "^(feat|fix|chore|docs|refactor)\/RSS-PZ-(\\d\\d)_\\w+$",
     "errorMsg": "ERROR!"
   },
   "author": "khvorosttt",

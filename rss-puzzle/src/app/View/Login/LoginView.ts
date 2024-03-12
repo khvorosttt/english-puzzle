@@ -2,6 +2,8 @@ import './login.css';
 import '../../css/normalize.css';
 import Component from '../../utils/base-component';
 import ValidationForm from '../Validation/Validation';
+import { Router } from '../../Router/Router';
+import View from '../View';
 
 interface Info {
     id: string;
@@ -35,17 +37,13 @@ const surnameLabel = {
     classes: ['surname-info'],
 };
 
-export default class LoginView {
-    container: HTMLElement;
-
-    constructor() {
-        this.container = document.createElement('div');
-        this.container.classList.add('login-background');
-        const form: HTMLFormElement = LoginView.createForm('', '', ['login-form']);
-        this.container.append(form);
+export default class LoginView extends View {
+    constructor(router: Router) {
+        super(['login-background']);
+        this.createForm('', '', ['login-form'], router);
     }
 
-    static createForm(id: string, text: string, classes: string[]) {
+    createForm(id: string, text: string, classes: string[], router: Router) {
         const form: Component = new Component('form', id, text, classes);
         const formName: HTMLHeadingElement = new Component('h1', '', 'Log in', [
             'login-name',
@@ -55,8 +53,8 @@ export default class LoginView {
         const button = LoginView.createButton('login-button', 'Login', ['login-button']);
         form.setChildren(formName, nameBox, surnameBox, button);
         const formContainer: HTMLFormElement = form.getContainer<HTMLFormElement>();
-        ValidationForm.setFormListeners(formContainer);
-        return formContainer;
+        ValidationForm.setFormListeners(formContainer, router);
+        this.container?.append(formContainer);
     }
 
     static createNameBox(name: Info, label: Pick<Info, 'text' | 'classes'>, classes: string[]) {
