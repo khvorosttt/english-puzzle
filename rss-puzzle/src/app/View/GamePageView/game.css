@@ -1,0 +1,72 @@
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: url(../../../imgs/gamePage-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.game-area {
+    width: 750px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    background-color: rgb(255, 255, 255, 0.4);
+    border-radius: 25px;
+}
+
+.result-container {
+    background-color: white;
+    width: 700px;
+    height: 500px;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 5px;
+}
+
+.resources-container {
+    background-color: white;
+    width: 700px;
+    height: 70px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.word-block {
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 50px;
+}
+
+.sentence-block {
+    display: flex;
+    justify-content: space-around;
+}
+
+.word-answer-block {
+    min-width: 50px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.full-answer {
+    border: 1px solid black;
+}
+
+.hide-resource {
+    opacity: 0;
+}

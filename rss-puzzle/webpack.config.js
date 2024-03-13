@@ -22,6 +22,11 @@ module.exports = {
             test: /\.ts$/i,
             use: 'ts-loader',
         },
+        {
+            test: /\.json$/,
+            use: ['json-loader'],
+            type: 'javascript/auto'
+        },
       ]
     },
     output: {
