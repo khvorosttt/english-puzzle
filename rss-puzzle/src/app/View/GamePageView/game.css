@@ -17,7 +17,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 20px;
     background-color: rgb(255, 255, 255, 0.4);
     border-radius: 25px;
 }
@@ -41,6 +41,11 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
 }
 
 .word-block {
@@ -69,4 +74,34 @@
 
 .hide-resource {
     opacity: 0;
+}
+
+.false-result {
+    border: 1px solid red;
+}
+
+.true-result {
+    border: 1px solid green;
+}
+
+.button-check {
+    border-radius: 15px;
+    padding: 7px;
+    font-size: 26px;
+    background-color: #bf82c5;
+    border: 1px solid #58244f;
+    color: #58244f;
+    opacity: 1;
+}
+
+.button-check:hover {
+    background-color: #7e4c9e;
+    border: 1px solid #f5b7ae;
+    color: #f5b7ae;
+    cursor: pointer;
+}
+
+.button-check:disabled {
+    cursor: default;
+    opacity: 0.7;
 }
