@@ -25,6 +25,12 @@ export default class GameLogic {
 
     private checkButton: HTMLButtonElement | null;
 
+    private continueButton: HTMLButtonElement | null;
+
+    private resultContainer: HTMLDivElement | null;
+
+    private resourcesContainer: HTMLDivElement | null;
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -32,23 +38,47 @@ export default class GameLogic {
         this.levelInfo = new LevelInfoModel(this.level);
         this.roundInfo = this.levelInfo.getRound(this.round);
         this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
+        this.resultContainer = null;
+        this.resourcesContainer = null;
         this.checkButton = null;
+        this.continueButton = null;
         GameLogic.mixWords(this.resoucesSentence);
     }
 
-    createResourceBlocks(resourcesContainer: HTMLDivElement) {
+    initGameElement(
+        resultContainer: HTMLDivElement,
+        resourcesContainer: HTMLDivElement,
+        checkButton: HTMLButtonElement,
+        continueButton: HTMLButtonElement
+    ) {
+        this.resultContainer = resultContainer;
+        this.resourcesContainer = resourcesContainer;
+        this.checkButton = checkButton;
+        this.continueButton = continueButton;
+        this.createResourceBlocks();
+        this.createResultBlocks();
+        this.setCheckLogic();
+        this.setContinueLogic();
+    }
+
+    createResourceBlocks() {
+        isNull(this.resourcesContainer);
+        this.resourcesContainer.replaceChildren();
+        this.wordBlocks.length = 0;
         this.resoucesSentence.forEach((word) => {
             const wordBlock: HTMLDivElement = new Component('div', '', word, ['word-block', 'full-resource'], {
                 eventName: 'click',
                 callback: (event) => this.wordResourceClick(event),
             }).getContainer<HTMLDivElement>();
             this.wordBlocks.push(wordBlock);
-            resourcesContainer.append(wordBlock);
+            isNull(this.resourcesContainer);
+            this.resourcesContainer.append(wordBlock);
         });
     }
 
-    createResultBlocks(resultContainer: HTMLDivElement) {
+    createResultBlocks() {
         const sentenceBlock: Component = new Component('div', '', '', ['sentence-block']);
+        this.resultBlocks.length = 0;
         for (let i = 0; i < this.resoucesSentence.length; i += 1) {
             const wordAnswerBlock: HTMLDivElement = new Component(
                 'div',
@@ -63,7 +93,8 @@ export default class GameLogic {
             this.resultBlocks.push(wordAnswerBlock);
             sentenceBlock.setChildren(wordAnswerBlock);
         }
-        resultContainer.append(sentenceBlock.getContainer<HTMLDivElement>());
+        isNull(this.resultContainer);
+        this.resultContainer.append(sentenceBlock.getContainer<HTMLDivElement>());
         this.currentFindSentence.push(sentenceBlock.getContainer<HTMLDivElement>());
     }
 
@@ -73,7 +104,7 @@ export default class GameLogic {
         const pathTo: HTMLDivElement[] | undefined = this.resultBlocks.filter((block) =>
             block.classList.contains('empty-answer')
         );
-        if (pathTo) {
+        if (pathTo && !currentElem.classList.contains('empty-resource')) {
             Coordinates.animateBlock(pathTo[0], currentElem, 3000);
             pathTo[0].classList.remove('empty-answer');
             const checkDisabled: boolean = pathTo.length === 1;
@@ -84,11 +115,12 @@ export default class GameLogic {
     wordResultClick(event: Event | undefined) {
         isNull(event);
         const currentElem: HTMLDivElement = <HTMLDivElement>event.currentTarget;
+        if (currentElem.classList.contains('non-active')) return;
         currentElem.classList.remove('true-result', 'false-result');
         const pathTo: HTMLDivElement | undefined = this.wordBlocks.find((block) =>
             block.classList.contains('empty-resource')
         );
-        if (pathTo) {
+        if (pathTo && currentElem.classList.contains('full-answer')) {
             Coordinates.animateBlock(pathTo, currentElem, 3000);
             pathTo.classList.remove('empty-resource');
             setTimeout(GameLogic.setContentToResorceBlock, 3000, pathTo, currentElem);
@@ -127,9 +159,14 @@ export default class GameLogic {
         return mixArray.sort(() => Math.random() - 0.5);
     }
 
-    setCheckLogic(checkButton: HTMLButtonElement) {
-        this.checkButton = checkButton;
+    setCheckLogic() {
+        isNull(this.checkButton);
         this.checkButton.addEventListener('click', this.checkSentence.bind(this));
+    }
+
+    setContinueLogic() {
+        isNull(this.continueButton);
+        this.continueButton.addEventListener('click', this.nextSentence.bind(this));
     }
 
     checkSentence() {
@@ -143,6 +180,43 @@ export default class GameLogic {
                 block.classList.add('true-result');
             }
         });
-        console.log(falseValues);
+        if (!falseValues) {
+            this.resultBlocks.forEach((block: HTMLDivElement) => {
+                block.classList.add('non-active');
+            });
+            isNull(this.continueButton);
+            this.continueButton.disabled = false;
+        }
+    }
+
+    nextSentence() {
+        this.countSentence += 1;
+        if (this.countSentence < 10) {
+            this.goToNextSentence();
+        } else if (this.countSentence === 10) {
+            this.goToNextRound();
+        }
+    }
+
+    goToNextSentence() {
+        this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
+        GameLogic.mixWords(this.resoucesSentence);
+        this.createResourceBlocks();
+        this.createResultBlocks();
+        isNull(this.continueButton);
+        this.continueButton.disabled = true;
+        isNull(this.checkButton);
+        this.checkButton.disabled = true;
+    }
+
+    goToNextRound() {
+        this.resourcesContainer?.replaceChildren();
+        this.resultContainer?.replaceChildren();
+        if (this.round < this.levelInfo.rounds.length) {
+            this.round += 1;
+        }
+        this.roundInfo = this.levelInfo.rounds[this.round];
+        this.countSentence = 0;
+        this.goToNextSentence();
     }
 }

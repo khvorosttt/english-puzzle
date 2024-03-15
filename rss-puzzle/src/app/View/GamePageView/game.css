@@ -31,6 +31,7 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 5px;
+    gap: 3px;
 }
 
 .resources-container {
@@ -43,9 +44,10 @@
     justify-content: space-around;
 }
 
-.button-container {
+.buttons-container {
     display: flex;
     justify-content: center;
+    gap: 30px;
 }
 
 .word-block {
@@ -84,7 +86,8 @@
     border: 1px solid green;
 }
 
-.button-check {
+.button-check,
+.button-continue {
     border-radius: 15px;
     padding: 7px;
     font-size: 26px;
@@ -94,14 +97,23 @@
     opacity: 1;
 }
 
-.button-check:hover {
+.button-check:hover,
+.button-continue:hover {
     background-color: #7e4c9e;
     border: 1px solid #f5b7ae;
     color: #f5b7ae;
     cursor: pointer;
 }
 
-.button-check:disabled {
+.button-check:disabled,
+.button-continue:disabled {
     cursor: default;
     opacity: 0.7;
+}
+
+.button-check:disabled:hover,
+.button-continue:disabled:hover {
+    background-color: #bf82c5;
+    border: 1px solid #58244f;
+    color: #58244f;
 }
