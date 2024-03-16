@@ -22,13 +22,9 @@ export default class GamePageView extends View {
             'button-check',
         ]).getContainer<HTMLButtonElement>();
         buttonCheck.disabled = true;
-        const buttonContinue: HTMLButtonElement = new Component('button', 'continue', 'Continue', [
-            'button-continue',
-        ]).getContainer<HTMLButtonElement>();
-        buttonContinue.disabled = true;
         const logic: GameLogic = new GameLogic();
-        logic.initGameElement(resultContainer, resourcesContainer, buttonCheck, buttonContinue);
-        buttonContainer.setChildren(buttonCheck, buttonContinue);
+        logic.initGameElement(resultContainer, resourcesContainer, buttonCheck);
+        buttonContainer.setChildren(buttonCheck);
         gameArea.setChildren(resultContainer, resourcesContainer, buttonContainer.getContainer<HTMLDivElement>());
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
     }

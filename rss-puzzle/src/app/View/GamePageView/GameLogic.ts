@@ -25,11 +25,11 @@ export default class GameLogic {
 
     private checkButton: HTMLButtonElement | null;
 
-    private continueButton: HTMLButtonElement | null;
-
     private resultContainer: HTMLDivElement | null;
 
     private resourcesContainer: HTMLDivElement | null;
+
+    private continueState: boolean;
 
     constructor() {
         this.wordBlocks = [];
@@ -41,24 +41,21 @@ export default class GameLogic {
         this.resultContainer = null;
         this.resourcesContainer = null;
         this.checkButton = null;
-        this.continueButton = null;
+        this.continueState = false;
         GameLogic.mixWords(this.resoucesSentence);
     }
 
     initGameElement(
         resultContainer: HTMLDivElement,
         resourcesContainer: HTMLDivElement,
-        checkButton: HTMLButtonElement,
-        continueButton: HTMLButtonElement
+        checkButton: HTMLButtonElement
     ) {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
-        this.continueButton = continueButton;
         this.createResourceBlocks();
         this.createResultBlocks();
         this.setCheckLogic();
-        this.setContinueLogic();
     }
 
     createResourceBlocks() {
@@ -164,28 +161,28 @@ export default class GameLogic {
         this.checkButton.addEventListener('click', this.checkSentence.bind(this));
     }
 
-    setContinueLogic() {
-        isNull(this.continueButton);
-        this.continueButton.addEventListener('click', this.nextSentence.bind(this));
-    }
-
     checkSentence() {
-        let falseValues: number = 0;
+        let trueValues: number = 0;
+        isNull(this.checkButton);
         const trueResult: string[] = this.roundInfo.words[this.countSentence].textExample.split(' ');
         this.resultBlocks.forEach((block: HTMLDivElement, index: number) => {
             if (block.textContent !== trueResult[index]) {
                 block.classList.add('false-result');
-                falseValues += 1;
             } else {
                 block.classList.add('true-result');
+                trueValues += 1;
             }
         });
-        if (!falseValues) {
+        if (this.continueState) {
+            this.nextSentence();
+            trueValues = 0;
+        }
+        if (trueValues === this.resultBlocks.length && !this.continueState) {
             this.resultBlocks.forEach((block: HTMLDivElement) => {
                 block.classList.add('non-active');
             });
-            isNull(this.continueButton);
-            this.continueButton.disabled = false;
+            this.continueState = true;
+            this.checkButton.textContent = 'Continue';
         }
     }
 
@@ -196,6 +193,9 @@ export default class GameLogic {
         } else if (this.countSentence === 10) {
             this.goToNextRound();
         }
+        this.continueState = false;
+        isNull(this.checkButton);
+        this.checkButton.textContent = 'Check';
     }
 
     goToNextSentence() {
@@ -203,8 +203,6 @@ export default class GameLogic {
         GameLogic.mixWords(this.resoucesSentence);
         this.createResourceBlocks();
         this.createResultBlocks();
-        isNull(this.continueButton);
-        this.continueButton.disabled = true;
         isNull(this.checkButton);
         this.checkButton.disabled = true;
     }
