@@ -27,6 +27,16 @@ export default class GamePageView extends View {
         const translateContainer: HTMLDivElement = new Component('div', '', '', [
             'translate-container',
         ]).getContainer<HTMLDivElement>();
+        const userIteractionContainer: HTMLDivElement = new Component('div', '', '', [
+            'user-iteraction-container',
+        ]).getContainer<HTMLDivElement>();
+        const translateButton: HTMLButtonElement = new Component('button', 'translate', `Translate ❌`, [
+            'translate-button',
+        ]).getContainer<HTMLButtonElement>();
+        translateButton.addEventListener('click', (event: Event) =>
+            GamePageView.translateEvent(event, translateContainer)
+        );
+        userIteractionContainer.append(levelRoundContainer, translateButton);
         logic.initGameElement(
             resultContainer,
             resourcesContainer,
@@ -36,13 +46,23 @@ export default class GamePageView extends View {
         );
         buttonContainer.setChildren(buttonCheck);
         gameArea.setChildren(
-            levelRoundContainer,
+            userIteractionContainer,
             translateContainer,
             resultContainer,
             resourcesContainer,
             buttonContainer.getContainer<HTMLDivElement>()
         );
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
+    }
+
+    static translateEvent(event: Event, translateContainer: HTMLDivElement) {
+        const translateButton: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
+        translateContainer.classList.toggle('show');
+        if (translateContainer.classList.contains('show')) {
+            translateButton.textContent = 'Translate 👀';
+        } else {
+            translateButton.textContent = 'Translate ❌';
+        }
     }
 
     static createLevelRoundContainer(logic: GameLogic) {
