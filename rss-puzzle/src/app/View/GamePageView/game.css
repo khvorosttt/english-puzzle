@@ -12,12 +12,12 @@
 
 .game-area {
     width: 750px;
-    height: 700px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     background-color: rgb(255, 255, 255, 0.4);
     border-radius: 25px;
 }
@@ -25,8 +25,8 @@
 .result-container {
     background-color: white;
     width: 700px;
-    height: 500px;
-    border-radius: 25px;
+    height: 400px;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -37,8 +37,8 @@
 .resources-container {
     background-color: white;
     width: 700px;
-    height: 70px;
-    border-radius: 25px;
+    height: 50px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -115,4 +115,62 @@
 
 .sentence-block {
     height: 50px;
+}
+
+.level-round-container {
+    display: flex;
+    gap: 30px;
+}
+
+.level-button,
+.round-button {
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px;
+    width: 80px;
+    background-color: #f08a9d;
+    border: 1px solid #662261;
+    color: #662261;
+}
+
+.level-button:hover,
+.round-button:hover {
+    background-color: #662261;
+    border: 1px solid #f08a9d;
+    color: #f08a9d;
+}
+
+.level-list,
+.round-list {
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    height: 130px;
+    background-color: #f08a9d;
+    gap: 3px;
+    width: 80px;
+    border-radius: 5px;
+}
+
+.level-item,
+.round-item {
+    cursor: pointer;
+}
+
+.level-item:hover,
+.round-item:hover,
+.level-selected,
+.round-selected {
+    background-color: #662261;
+    color: #f08a9d;
+}
+
+.round-list {
+    overflow-y: scroll;
+}
+
+.showed {
+    display: flex;
+    position: absolute;
 }

@@ -7,7 +7,7 @@ import dataLevel6 from '../data/wordCollectionLevel6.json';
 import { RoundInterface } from './interface';
 
 export default class LevelInfoModel {
-    rounds: RoundInterface[];
+    private rounds: RoundInterface[];
 
     constructor(level: number) {
         this.rounds = LevelInfoModel.setData(level);
@@ -32,5 +32,9 @@ export default class LevelInfoModel {
 
     getRound(round: number) {
         return this.rounds[round];
+    }
+
+    getRounds() {
+        return this.rounds;
     }
 }

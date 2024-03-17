@@ -15,8 +15,6 @@ export default class GameLogic {
 
     private resoucesSentence: string[];
 
-    private currentFindSentence: HTMLDivElement[];
-
     private countSentence = 0;
 
     private wordBlocks: HTMLDivElement[];
@@ -31,10 +29,11 @@ export default class GameLogic {
 
     private continueState: boolean;
 
+    private levelRoundContainer: HTMLDivElement | null;
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
-        this.currentFindSentence = [];
         this.levelInfo = new LevelInfoModel(this.level);
         this.roundInfo = this.levelInfo.getRound(this.round);
         this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
@@ -42,18 +41,85 @@ export default class GameLogic {
         this.resourcesContainer = null;
         this.checkButton = null;
         this.continueState = false;
+        this.levelRoundContainer = null;
+    }
+
+    initLevel() {
+        this.levelInfo = new LevelInfoModel(this.level);
+        this.round = 0;
+        isNull(this.levelRoundContainer);
+        const roundList: HTMLDivElement | null = this.levelRoundContainer.querySelector('.round-list');
+        isNull(roundList);
+        this.initRoundList(roundList);
+        this.initRound();
+    }
+
+    initRound() {
+        this.countSentence = 0;
+        this.roundInfo = this.levelInfo.getRound(this.round);
+        this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
+        this.createResourceBlocks();
+        this.resultContainer?.replaceChildren();
+        this.createResultBlocks();
+    }
+
+    initRoundList(roundList: HTMLDivElement) {
+        roundList.replaceChildren();
+        for (let i = 0; i < this.levelInfo.getRounds().length; i += 1) {
+            const roundItem: HTMLLIElement = new Component('div', `round_${i}`, `Round ${i + 1}`, [
+                'round-item',
+            ]).getContainer<HTMLLIElement>();
+            if (i === this.round) {
+                roundItem.classList.add('round-selected');
+            }
+            roundList.append(roundItem);
+            roundItem.addEventListener('click', (event) => this.roundClick.bind(this)(event));
+        }
+    }
+
+    roundClick(event: Event) {
+        const currentElem: HTMLLIElement = <HTMLLIElement>event.currentTarget;
+        isNull(this.levelRoundContainer);
+        const beforeSelected: HTMLLIElement | null = this.levelRoundContainer.querySelector('.round-selected');
+        isNull(beforeSelected);
+        beforeSelected.classList.remove('round-selected');
+        currentElem.classList.add('round-selected');
+        this.round = Number(currentElem.id.split('_').pop());
+        const roundButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.round-button');
+        isNull(roundButton);
+        roundButton.textContent = currentElem.textContent;
+        this.levelRoundContainer.querySelector('.round-list')?.classList.remove('showed');
+        this.initRound();
+    }
+
+    levelClick(event: Event) {
+        const currentElem: HTMLLIElement = <HTMLLIElement>event.currentTarget;
+        isNull(this.levelRoundContainer);
+        const beforeSelected: HTMLLIElement | null = this.levelRoundContainer.querySelector('.level-selected');
+        isNull(beforeSelected);
+        beforeSelected.classList.remove('level-selected');
+        currentElem.classList.add('level-selected');
+        this.level = Number(currentElem.id.split('_').pop());
+        const levelButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.level-button');
+        isNull(levelButton);
+        levelButton.textContent = currentElem.textContent;
+        this.levelRoundContainer.querySelector('.level-list')?.classList.remove('showed');
+        this.initLevel();
+        const roundButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.round-button');
+        isNull(roundButton);
+        roundButton.textContent = `Round ${this.round + 1}`;
     }
 
     initGameElement(
         resultContainer: HTMLDivElement,
         resourcesContainer: HTMLDivElement,
-        checkButton: HTMLButtonElement
+        checkButton: HTMLButtonElement,
+        levelRoundContainer: HTMLDivElement
     ) {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
-        this.createResourceBlocks();
-        this.createResultBlocks();
+        this.levelRoundContainer = levelRoundContainer;
         this.setCheckLogic();
         this.resourcesContainer.addEventListener('dragover', (event) => {
             event.preventDefault();
@@ -61,6 +127,7 @@ export default class GameLogic {
         this.resourcesContainer.addEventListener('drop', (event) => {
             this.dropResourceEvent.bind(this)(event);
         });
+        this.initLevel();
     }
 
     createResourceBlocks() {
@@ -98,9 +165,11 @@ export default class GameLogic {
         const currentElem: HTMLDivElement = <HTMLDivElement>event.currentTarget;
         currentElem.classList.remove('relocatable');
         const checkState = this.resultBlocks.find((block) => block.classList.contains('empty-answer'));
+        isNull(this.checkButton);
         if (!checkState) {
-            isNull(this.checkButton);
             this.checkButton.disabled = false;
+        } else {
+            this.checkButton.disabled = true;
         }
     }
 
@@ -207,11 +276,10 @@ export default class GameLogic {
         }
         isNull(this.resultContainer);
         this.resultContainer.append(sentenceBlock);
-        this.currentFindSentence.push(sentenceBlock);
-        this.currentFindSentence[this.countSentence].addEventListener('dragover', (event) => {
+        sentenceBlock.addEventListener('dragover', (event) => {
             event.preventDefault();
         });
-        this.currentFindSentence[this.countSentence].addEventListener('drop', (event) => {
+        sentenceBlock.addEventListener('drop', (event) => {
             this.dropResultEvent(event);
         });
     }
@@ -359,12 +427,12 @@ export default class GameLogic {
             });
             this.continueState = true;
             this.checkButton.textContent = 'Continue';
-            this.currentFindSentence[this.countSentence].removeEventListener('dragover', (event) => {
-                event.preventDefault();
-            });
-            this.currentFindSentence[this.countSentence].removeEventListener('drop', (event) => {
-                this.dropResultEvent(event);
-            });
+            // this.currentFindSentence[this.countSentence].removeEventListener('dragover', (event) => {
+            //     event.preventDefault();
+            // });
+            // this.currentFindSentence[this.countSentence].removeEventListener('drop', (event) => {
+            //     this.dropResultEvent(event);
+            // });
         }
     }
 
@@ -391,10 +459,10 @@ export default class GameLogic {
     goToNextRound() {
         this.resourcesContainer?.replaceChildren();
         this.resultContainer?.replaceChildren();
-        if (this.round < this.levelInfo.rounds.length) {
+        if (this.round < this.levelInfo.getRounds().length) {
             this.round += 1;
         }
-        this.roundInfo = this.levelInfo.rounds[this.round];
+        this.roundInfo = this.levelInfo.getRound(this.round);
         this.countSentence = 0;
         this.goToNextSentence();
     }

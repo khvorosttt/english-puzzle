@@ -23,9 +23,51 @@ export default class GamePageView extends View {
         ]).getContainer<HTMLButtonElement>();
         buttonCheck.disabled = true;
         const logic: GameLogic = new GameLogic();
-        logic.initGameElement(resultContainer, resourcesContainer, buttonCheck);
+        const levelRoundContainer: HTMLDivElement = GamePageView.createLevelRoundContainer(logic);
+        logic.initGameElement(resultContainer, resourcesContainer, buttonCheck, levelRoundContainer);
         buttonContainer.setChildren(buttonCheck);
-        gameArea.setChildren(resultContainer, resourcesContainer, buttonContainer.getContainer<HTMLDivElement>());
+        gameArea.setChildren(
+            levelRoundContainer,
+            resultContainer,
+            resourcesContainer,
+            buttonContainer.getContainer<HTMLDivElement>()
+        );
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
+    }
+
+    static createLevelRoundContainer(logic: GameLogic) {
+        const levelRoundContainer: HTMLDivElement = new Component('div', '', '', [
+            'level-round-container',
+        ]).getContainer<HTMLDivElement>();
+        const levelContainer: HTMLDivElement = new Component('div', '', '', [
+            'level-container',
+        ]).getContainer<HTMLDivElement>();
+        const roundContainer: HTMLDivElement = new Component('div', '', '', [
+            'round-container',
+        ]).getContainer<HTMLDivElement>();
+        const levelButton: HTMLButtonElement = new Component('button', 'level-button', 'Level 1', [
+            'level-button',
+        ]).getContainer<HTMLButtonElement>();
+        const levelList: HTMLDivElement = new Component('div', '', '', ['level-list']).getContainer<HTMLDivElement>();
+        for (let i = 1; i <= 6; i += 1) {
+            const levelItem: HTMLLIElement = new Component('div', `level_${i}`, `Level ${i}`, [
+                'level-item',
+            ]).getContainer<HTMLLIElement>();
+            if (i === 1) {
+                levelItem.classList.add('level-selected');
+            }
+            levelItem.addEventListener('click', (event) => logic.levelClick(event));
+            levelList.append(levelItem);
+        }
+        levelContainer.append(levelButton, levelList);
+        levelButton.addEventListener('click', () => levelList.classList.toggle('showed'));
+        const roundButton: HTMLButtonElement = new Component('button', 'round-button', 'Round 1', [
+            'round-button',
+        ]).getContainer<HTMLButtonElement>();
+        const roundList: HTMLDivElement = new Component('div', '', '', ['round-list']).getContainer<HTMLDivElement>();
+        roundButton.addEventListener('click', () => roundList.classList.toggle('showed'));
+        roundContainer.append(roundButton, roundList);
+        levelRoundContainer.append(levelContainer, roundContainer);
+        return levelRoundContainer;
     }
 }
