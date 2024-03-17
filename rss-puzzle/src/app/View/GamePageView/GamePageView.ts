@@ -24,10 +24,20 @@ export default class GamePageView extends View {
         buttonCheck.disabled = true;
         const logic: GameLogic = new GameLogic();
         const levelRoundContainer: HTMLDivElement = GamePageView.createLevelRoundContainer(logic);
-        logic.initGameElement(resultContainer, resourcesContainer, buttonCheck, levelRoundContainer);
+        const translateContainer: HTMLDivElement = new Component('div', '', '', [
+            'translate-container',
+        ]).getContainer<HTMLDivElement>();
+        logic.initGameElement(
+            resultContainer,
+            resourcesContainer,
+            buttonCheck,
+            levelRoundContainer,
+            translateContainer
+        );
         buttonContainer.setChildren(buttonCheck);
         gameArea.setChildren(
             levelRoundContainer,
+            translateContainer,
             resultContainer,
             resourcesContainer,
             buttonContainer.getContainer<HTMLDivElement>()

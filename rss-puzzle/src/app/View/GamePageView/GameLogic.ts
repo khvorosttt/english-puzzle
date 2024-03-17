@@ -31,6 +31,8 @@ export default class GameLogic {
 
     private levelRoundContainer: HTMLDivElement | null;
 
+    private translateContainer: HTMLDivElement | null;
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -42,6 +44,7 @@ export default class GameLogic {
         this.checkButton = null;
         this.continueState = false;
         this.levelRoundContainer = null;
+        this.translateContainer = null;
     }
 
     initLevel() {
@@ -114,12 +117,14 @@ export default class GameLogic {
         resultContainer: HTMLDivElement,
         resourcesContainer: HTMLDivElement,
         checkButton: HTMLButtonElement,
-        levelRoundContainer: HTMLDivElement
+        levelRoundContainer: HTMLDivElement,
+        translateContainer: HTMLDivElement
     ) {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
         this.levelRoundContainer = levelRoundContainer;
+        this.translateContainer = translateContainer;
         this.setCheckLogic();
         this.resourcesContainer.addEventListener('dragover', (event) => {
             event.preventDefault();
@@ -262,6 +267,10 @@ export default class GameLogic {
     }
 
     createResultBlocks() {
+        isNull(this.translateContainer);
+        this.translateContainer.textContent = this.levelInfo.getRound(this.round).words[
+            this.countSentence
+        ].textExampleTranslate;
         const sentenceBlock: HTMLDivElement = new Component('div', '', '', [
             'sentence-block',
         ]).getContainer<HTMLDivElement>();

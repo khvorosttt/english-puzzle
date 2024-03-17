@@ -12,7 +12,7 @@
 
 .game-area {
     width: 750px;
-    height: 600px;
+    height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -173,4 +173,12 @@
 .showed {
     display: flex;
     position: absolute;
+}
+
+.translate-container {
+    background-color: white;
+    padding: 3px;
+    border: 1px solid #662261;
+    color: #662261;
+    border-radius: 5px;
 }
