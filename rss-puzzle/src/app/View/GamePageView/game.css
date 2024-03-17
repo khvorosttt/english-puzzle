@@ -51,27 +51,22 @@
 }
 
 .word-block {
-    border: 1px solid black;
     padding: 5px;
     border-radius: 5px;
     cursor: pointer;
     min-width: 50px;
+    height: 80%;
+    text-align: center;
+}
+
+.full-resource,
+.full-answer {
+    border: 1px solid black;
 }
 
 .sentence-block {
     display: flex;
     justify-content: space-around;
-}
-
-.word-answer-block {
-    min-width: 50px;
-    height: 30px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.full-answer {
-    border: 1px solid black;
 }
 
 .hide-resource {
@@ -112,4 +107,12 @@
     background-color: #bf82c5;
     border: 1px solid #58244f;
     color: #58244f;
+}
+
+.relocatable {
+    z-index: 2;
+}
+
+.sentence-block {
+    height: 50px;
 }
