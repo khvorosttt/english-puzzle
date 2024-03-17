@@ -51,12 +51,10 @@ export default class GamePageView extends View {
         const audio: HTMLAudioElement = new Component('audio', '', '', [
             'audio-element',
         ]).getContainer<HTMLAudioElement>();
-        const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
+        const audioButton: HTMLButtonElement = new Component('button', '', `🔇`, [
             'audio-button',
         ]).getContainer<HTMLButtonElement>();
-        audioButton.addEventListener('click', () => {
-            audio.play();
-        });
+        GamePageView.audioEvent(audio, audioButton);
         userIteractionContainer.append(levelRoundContainer, translateButton, logoutButton, audioButton);
         logic.initGameElement(
             resultContainer,
@@ -76,6 +74,23 @@ export default class GamePageView extends View {
             audio
         );
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
+    }
+
+    static audioEvent(audio: HTMLAudioElement, audioButton: HTMLButtonElement) {
+        const copyButton: HTMLButtonElement = audioButton;
+        audioButton.addEventListener('click', () => {
+            audio.play();
+        });
+        audio.addEventListener('play', () => {
+            copyButton.textContent = '🔊';
+            copyButton.style.background = '#cc94c4';
+            copyButton.style.boxShadow = '-5px 10px 10px yellow';
+        });
+        audio.addEventListener('pause', () => {
+            copyButton.textContent = '🔇';
+            copyButton.style.background = '#f08a9d';
+            copyButton.style.boxShadow = 'none';
+        });
     }
 
     static translateEvent(event: Event, translateContainer: HTMLDivElement) {
