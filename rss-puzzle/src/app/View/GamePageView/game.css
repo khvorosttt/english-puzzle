@@ -182,7 +182,8 @@
 }
 
 .translate-button,
-.game-logout-button {
+.game-logout-button,
+.audio-button {
     cursor: pointer;
     border-radius: 5px;
     padding: 5px;

@@ -48,13 +48,23 @@ export default class GamePageView extends View {
                 callback: () => buttonLogout(router),
             }
         ).getContainer<HTMLButtonElement>();
-        userIteractionContainer.append(levelRoundContainer, translateButton, logoutButton);
+        const audio: HTMLAudioElement = new Component('audio', '', '', [
+            'audio-element',
+        ]).getContainer<HTMLAudioElement>();
+        const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
+            'audio-button',
+        ]).getContainer<HTMLButtonElement>();
+        audioButton.addEventListener('click', () => {
+            audio.play();
+        });
+        userIteractionContainer.append(levelRoundContainer, translateButton, logoutButton, audioButton);
         logic.initGameElement(
             resultContainer,
             resourcesContainer,
             buttonCheck,
             levelRoundContainer,
-            translateContainer
+            translateContainer,
+            audio
         );
         buttonContainer.setChildren(buttonCheck);
         gameArea.setChildren(
@@ -62,7 +72,8 @@ export default class GamePageView extends View {
             translateContainer,
             resultContainer,
             resourcesContainer,
-            buttonContainer.getContainer<HTMLDivElement>()
+            buttonContainer.getContainer<HTMLDivElement>(),
+            audio
         );
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
     }

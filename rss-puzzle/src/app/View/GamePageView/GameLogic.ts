@@ -4,6 +4,8 @@ import Coordinates from '../../Coordinates/Coordinates';
 import LevelInfoModel from '../../Model/LevelInfoModel';
 import { RoundInterface } from '../../Model/interface';
 
+const AUDIO_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
+
 export default class GameLogic {
     private level: number = 1;
 
@@ -33,6 +35,8 @@ export default class GameLogic {
 
     private translateContainer: HTMLDivElement | null;
 
+    private audio: HTMLAudioElement | null;
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -45,6 +49,7 @@ export default class GameLogic {
         this.continueState = false;
         this.levelRoundContainer = null;
         this.translateContainer = null;
+        this.audio = null;
     }
 
     initLevel() {
@@ -118,7 +123,8 @@ export default class GameLogic {
         resourcesContainer: HTMLDivElement,
         checkButton: HTMLButtonElement,
         levelRoundContainer: HTMLDivElement,
-        translateContainer: HTMLDivElement
+        translateContainer: HTMLDivElement,
+        audio: HTMLAudioElement
     ) {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
@@ -132,6 +138,7 @@ export default class GameLogic {
         this.resourcesContainer.addEventListener('drop', (event) => {
             this.dropResourceEvent.bind(this)(event);
         });
+        this.audio = audio;
         this.initLevel();
     }
 
@@ -267,6 +274,8 @@ export default class GameLogic {
     }
 
     createResultBlocks() {
+        isNull(this.audio);
+        this.audio.src = `${AUDIO_PATH}${this.levelInfo.getRound(this.round).words[this.countSentence].audioExample}`;
         isNull(this.translateContainer);
         this.translateContainer.textContent = this.levelInfo.getRound(this.round).words[
             this.countSentence
@@ -436,12 +445,6 @@ export default class GameLogic {
             });
             this.continueState = true;
             this.checkButton.textContent = 'Continue';
-            // this.currentFindSentence[this.countSentence].removeEventListener('dragover', (event) => {
-            //     event.preventDefault();
-            // });
-            // this.currentFindSentence[this.countSentence].removeEventListener('drop', (event) => {
-            //     this.dropResultEvent(event);
-            // });
         }
     }
 
