@@ -2,14 +2,16 @@ import Component from '../../utils/base-component';
 import View from '../View';
 import GameLogic from './GameLogic';
 import './game.css';
+import { Router } from '../../Router/Router';
+import { buttonLogout } from '../StartPage/StartPageView';
 
 export default class GamePageView extends View {
-    constructor() {
+    constructor(router: Router) {
         super(['game-container']);
-        this.createGamePage();
+        this.createGamePage(router);
     }
 
-    createGamePage() {
+    createGamePage(router: Router) {
         const gameArea: Component = new Component('div', '', '', ['game-area']);
         const resultContainer: HTMLDivElement = new Component('div', 'result', '', [
             'result-container',
@@ -36,7 +38,17 @@ export default class GamePageView extends View {
         translateButton.addEventListener('click', (event: Event) =>
             GamePageView.translateEvent(event, translateContainer)
         );
-        userIteractionContainer.append(levelRoundContainer, translateButton);
+        const logoutButton: HTMLButtonElement = new Component(
+            'button',
+            'game-logout-button',
+            'Logout',
+            ['game-logout-button'],
+            {
+                eventName: 'click',
+                callback: () => buttonLogout(router),
+            }
+        ).getContainer<HTMLButtonElement>();
+        userIteractionContainer.append(levelRoundContainer, translateButton, logoutButton);
         logic.initGameElement(
             resultContainer,
             resourcesContainer,

@@ -45,7 +45,7 @@ export default class App {
             {
                 pagePath: 'game',
                 callback: () => {
-                    const gameView = new GamePageView();
+                    const gameView = new GamePageView(this.router);
                     this.setView(gameView);
                 },
             },

@@ -14,6 +14,11 @@ function buttonStart(router: Router) {
     router.navigate('game');
 }
 
+export function buttonLogout(router: Router) {
+    localStorage.clear();
+    router.navigate('login');
+}
+
 export default class StartPageView extends View {
     constructor(router: Router) {
         super(['start-page-container']);
@@ -36,12 +41,20 @@ export default class StartPageView extends View {
             `Hello, ${user.nameUser} ${user.surnameUser}! Welcome to the game.`,
             ['greeting-container']
         ).getContainer<HTMLDivElement>();
+        const buttonsContainer: HTMLDivElement = StartPageView.createWrapper('', '', [
+            'buttons-container',
+        ]).getContainer<HTMLDivElement>();
         const startButton: HTMLButtonElement = new Component('button', 'start-button', 'Start', ['start-button'], {
             eventName: 'click',
             callback: () => buttonStart(router),
         }).getContainer<HTMLButtonElement>();
         startButton.type = 'button';
-        wrapper.setChildren(gameName, gameInfo, greetingContainer, startButton);
+        const logoutButton: HTMLButtonElement = new Component('button', 'logout-button', 'Logout', ['logout-button'], {
+            eventName: 'click',
+            callback: () => buttonLogout(router),
+        }).getContainer<HTMLButtonElement>();
+        buttonsContainer.append(startButton, logoutButton);
+        wrapper.setChildren(gameName, gameInfo, greetingContainer, buttonsContainer);
         this.container?.append(wrapper.getContainer<HTMLDivElement>());
     }
 

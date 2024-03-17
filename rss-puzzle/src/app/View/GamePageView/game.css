@@ -181,7 +181,8 @@
     position: absolute;
 }
 
-.translate-button {
+.translate-button,
+.game-logout-button {
     cursor: pointer;
     border-radius: 5px;
     padding: 5px;

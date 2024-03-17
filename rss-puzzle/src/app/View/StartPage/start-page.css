@@ -35,7 +35,8 @@
     margin: 0 30px;
 }
 
-.start-button {
+.start-button,
+.logout-button {
     width: 150px;
     height: 70px;
     border-radius: 15px;
@@ -45,9 +46,14 @@
     color: #58244f;
 }
 
-.start-button:hover {
+.start-button:hover,
+.logout-button:hover {
     background-color: #7e4c9e;
     border: 1px solid #f5b7ae;
     color: #f5b7ae;
     cursor: pointer;
+}
+
+.buttons-container {
+    display: flex;
 }
