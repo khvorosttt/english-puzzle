@@ -36,7 +36,7 @@ export default class GamePageView extends View {
             'translate-button',
         ]).getContainer<HTMLButtonElement>();
         translateButton.addEventListener('click', (event: Event) =>
-            GamePageView.translateEvent(event, translateContainer)
+            GamePageView.buttonHideEvent(event, translateContainer, 'Translate')
         );
         const logoutButton: HTMLButtonElement = new Component(
             'button',
@@ -58,7 +58,9 @@ export default class GamePageView extends View {
         const audioHideButton: HTMLButtonElement = new Component('button', '', `Audio ❌`, [
             'audio-hide-button',
         ]).getContainer<HTMLButtonElement>();
-        GamePageView.audioHideButtonEvent(audioHideButton, audioButton);
+        audioHideButton.addEventListener('click', (event: Event) =>
+            GamePageView.buttonHideEvent(event, audioButton, 'Audio')
+        );
         userIteractionContainer.append(
             levelRoundContainer,
             translateButton,
@@ -103,28 +105,40 @@ export default class GamePageView extends View {
         });
     }
 
-    static audioHideButtonEvent(audioHideButton: HTMLButtonElement, audioButton: HTMLButtonElement) {
-        const copyHideAudioButton: HTMLButtonElement = audioHideButton;
-        audioHideButton.addEventListener('click', () => {
-            audioButton.classList.toggle('show');
-            if (audioButton.classList.contains('show')) {
-                copyHideAudioButton.textContent = 'Audio 👀';
-                copyHideAudioButton.classList.add('active-button');
-            } else {
-                copyHideAudioButton.textContent = 'Audio ❌';
-            }
-        });
-    }
+    // static audioHideButtonEvent(audioHideButton: HTMLButtonElement, audioButton: HTMLButtonElement) {
+    //     const copyHideAudioButton: HTMLButtonElement = audioHideButton;
+    //     audioHideButton.addEventListener('click', () => {
+    //         audioButton.classList.toggle('show');
+    //         copyHideAudioButton.classList.toggle('active-button');
+    //         if (audioButton.classList.contains('show')) {
+    //             copyHideAudioButton.textContent = 'Audio 👀';
+    //         } else {
+    //             copyHideAudioButton.textContent = 'Audio ❌';
+    //         }
+    //     });
+    // }
 
-    static translateEvent(event: Event, translateContainer: HTMLDivElement) {
-        const translateButton: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
-        translateContainer.classList.toggle('show');
-        if (translateContainer.classList.contains('show')) {
-            translateButton.textContent = 'Translate 👀';
+    static buttonHideEvent(event: Event, element: HTMLElement, text: string) {
+        const button: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
+        element.classList.toggle('show');
+        button.classList.toggle('active-button');
+        if (element.classList.contains('show')) {
+            button.textContent = `${text} 👀`;
         } else {
-            translateButton.textContent = 'Translate ❌';
+            button.textContent = `${text} ❌`;
         }
     }
+
+    // static translateEvent(event: Event, translateContainer: HTMLDivElement) {
+    //     const translateButton: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
+    //     translateContainer.classList.toggle('show');
+    //     translateButton.classList.toggle('active-button');
+    //     if (translateContainer.classList.contains('show')) {
+    //         translateButton.textContent = 'Translate 👀';
+    //     } else {
+    //         translateButton.textContent = 'Translate ❌';
+    //     }
+    // }
 
     static createLevelRoundContainer(logic: GameLogic) {
         const levelRoundContainer: HTMLDivElement = new Component('div', '', '', [

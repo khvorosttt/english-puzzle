@@ -441,14 +441,17 @@ export default class GameLogic {
         const audioButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.audio-button');
         const audioHideButton: HTMLButtonElement | null =
             this.userIteractionContainer.querySelector('.audio-hide-button');
+        const translateButton: HTMLButtonElement | null =
+            this.userIteractionContainer.querySelector('.translate-button');
         isNull(audioButton);
         isNull(audioHideButton);
+        isNull(translateButton);
+        isNull(this.translateContainer);
         if (this.continueState) {
+            GameLogic.removeClassIfNotContains(audioHideButton, audioButton, 'active-button', 'show');
+            GameLogic.removeClassIfNotContains(translateButton, this.translateContainer, 'active-button', 'show');
             this.nextSentence();
             trueValues = 0;
-            if (!audioHideButton.classList.contains('active-button')) {
-                audioButton.classList.remove('show');
-            }
         }
         if (trueValues === this.resultBlocks.length && !this.continueState) {
             this.resultBlocks.forEach((block: HTMLDivElement) => {
@@ -459,6 +462,18 @@ export default class GameLogic {
             this.continueState = true;
             this.checkButton.textContent = 'Continue';
             audioButton.classList.add('show');
+            this.translateContainer.classList.add('show');
+        }
+    }
+
+    static removeClassIfNotContains(
+        element: HTMLElement,
+        container: HTMLElement,
+        classContainsName: string,
+        className: string
+    ) {
+        if (!element.classList.contains(classContainsName)) {
+            container.classList.remove(className);
         }
     }
 
