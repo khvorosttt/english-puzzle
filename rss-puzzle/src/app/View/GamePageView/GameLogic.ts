@@ -31,6 +31,8 @@ export default class GameLogic {
 
     private continueState: boolean;
 
+    private userIteractionContainer: HTMLDivElement | null;
+
     private levelRoundContainer: HTMLDivElement | null;
 
     private translateContainer: HTMLDivElement | null;
@@ -47,6 +49,7 @@ export default class GameLogic {
         this.resourcesContainer = null;
         this.checkButton = null;
         this.continueState = false;
+        this.userIteractionContainer = null;
         this.levelRoundContainer = null;
         this.translateContainer = null;
         this.audio = null;
@@ -122,14 +125,15 @@ export default class GameLogic {
         resultContainer: HTMLDivElement,
         resourcesContainer: HTMLDivElement,
         checkButton: HTMLButtonElement,
-        levelRoundContainer: HTMLDivElement,
+        userIteractionContainer: HTMLDivElement,
         translateContainer: HTMLDivElement,
         audio: HTMLAudioElement
     ) {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
-        this.levelRoundContainer = levelRoundContainer;
+        this.userIteractionContainer = userIteractionContainer;
+        this.levelRoundContainer = userIteractionContainer.querySelector('.level-round-container');
         this.translateContainer = translateContainer;
         this.setCheckLogic();
         this.resourcesContainer.addEventListener('dragover', (event) => {
@@ -433,9 +437,18 @@ export default class GameLogic {
             }
             sequenceOrder += 1;
         });
+        isNull(this.userIteractionContainer);
+        const audioButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.audio-button');
+        const audioHideButton: HTMLButtonElement | null =
+            this.userIteractionContainer.querySelector('.audio-hide-button');
+        isNull(audioButton);
+        isNull(audioHideButton);
         if (this.continueState) {
             this.nextSentence();
             trueValues = 0;
+            if (!audioHideButton.classList.contains('active-button')) {
+                audioButton.classList.remove('show');
+            }
         }
         if (trueValues === this.resultBlocks.length && !this.continueState) {
             this.resultBlocks.forEach((block: HTMLDivElement) => {
@@ -445,6 +458,7 @@ export default class GameLogic {
             });
             this.continueState = true;
             this.checkButton.textContent = 'Continue';
+            audioButton.classList.add('show');
         }
     }
 

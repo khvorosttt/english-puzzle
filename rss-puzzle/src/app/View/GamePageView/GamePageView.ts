@@ -55,12 +55,22 @@ export default class GamePageView extends View {
             'audio-button',
         ]).getContainer<HTMLButtonElement>();
         GamePageView.audioEvent(audio, audioButton);
-        userIteractionContainer.append(levelRoundContainer, translateButton, logoutButton, audioButton);
+        const audioHideButton: HTMLButtonElement = new Component('button', '', `Audio ❌`, [
+            'audio-hide-button',
+        ]).getContainer<HTMLButtonElement>();
+        GamePageView.audioHideButtonEvent(audioHideButton, audioButton);
+        userIteractionContainer.append(
+            levelRoundContainer,
+            translateButton,
+            logoutButton,
+            audioHideButton,
+            audioButton
+        );
         logic.initGameElement(
             resultContainer,
             resourcesContainer,
             buttonCheck,
-            levelRoundContainer,
+            userIteractionContainer,
             translateContainer,
             audio
         );
@@ -90,6 +100,19 @@ export default class GamePageView extends View {
             copyButton.textContent = '🔇';
             copyButton.style.background = '#f08a9d';
             copyButton.style.boxShadow = 'none';
+        });
+    }
+
+    static audioHideButtonEvent(audioHideButton: HTMLButtonElement, audioButton: HTMLButtonElement) {
+        const copyHideAudioButton: HTMLButtonElement = audioHideButton;
+        audioHideButton.addEventListener('click', () => {
+            audioButton.classList.toggle('show');
+            if (audioButton.classList.contains('show')) {
+                copyHideAudioButton.textContent = 'Audio 👀';
+                copyHideAudioButton.classList.add('active-button');
+            } else {
+                copyHideAudioButton.textContent = 'Audio ❌';
+            }
         });
     }
 
