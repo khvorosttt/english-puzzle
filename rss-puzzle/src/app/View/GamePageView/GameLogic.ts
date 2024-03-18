@@ -150,13 +150,12 @@ export default class GameLogic {
         isNull(this.resourcesContainer);
         this.resourcesContainer.replaceChildren();
         this.wordBlocks.length = 0;
-        let wordsInSentence = 0;
         const countSymbols: number = this.resoucesSentence.join('').length;
         const coeffSymbol: number = 90 / countSymbols;
-        this.resoucesSentence.forEach((word) => {
+        this.resoucesSentence.forEach((word, index) => {
             const wordBlock: HTMLDivElement = new Component(
                 'div',
-                `${this.countSentence}_${wordsInSentence}`,
+                `${this.countSentence}_${index}`,
                 word,
                 ['word-block', 'full-resource'],
                 { eventName: 'click', callback: (event) => this.wordClick(event) }
@@ -166,7 +165,13 @@ export default class GameLogic {
             wordBlock.addEventListener('dragstart', (event) => GameLogic.dragStart(event));
             wordBlock.addEventListener('dragend', (event) => this.dragEnd.bind(this)(event));
             this.wordBlocks.push(wordBlock);
-            wordsInSentence += 1;
+            if (index === 0) {
+                wordBlock.classList.add('start-puzzle');
+            } else if (index === this.resoucesSentence.length - 1) {
+                wordBlock.classList.add('end-puzzle');
+            } else {
+                wordBlock.classList.add('middle-puzzle');
+            }
         });
         isNull(this.resourcesContainer);
         GameLogic.mixWords(this.wordBlocks);
