@@ -151,6 +151,8 @@ export default class GameLogic {
         this.resourcesContainer.replaceChildren();
         this.wordBlocks.length = 0;
         let wordsInSentence = 0;
+        const countSymbols: number = this.resoucesSentence.join('').length;
+        const coeffSymbol: number = 90 / countSymbols;
         this.resoucesSentence.forEach((word) => {
             const wordBlock: HTMLDivElement = new Component(
                 'div',
@@ -160,6 +162,7 @@ export default class GameLogic {
                 { eventName: 'click', callback: (event) => this.wordClick(event) }
             ).getContainer<HTMLDivElement>();
             wordBlock.draggable = true;
+            wordBlock.style.width = `${coeffSymbol * word.length}%`;
             wordBlock.addEventListener('dragstart', (event) => GameLogic.dragStart(event));
             wordBlock.addEventListener('dragend', (event) => this.dragEnd.bind(this)(event));
             this.wordBlocks.push(wordBlock);
@@ -287,6 +290,8 @@ export default class GameLogic {
         const sentenceBlock: HTMLDivElement = new Component('div', '', '', [
             'sentence-block',
         ]).getContainer<HTMLDivElement>();
+        isNull(this.resultContainer);
+        sentenceBlock.style.height = `9%`;
         this.resultBlocks.length = 0;
         for (let i = 0; i < this.resoucesSentence.length; i += 1) {
             const wordAnswerBlock: HTMLDivElement = new Component('div', '', '', ['word-block', 'empty-answer'], {
