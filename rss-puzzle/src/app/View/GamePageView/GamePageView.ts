@@ -25,6 +25,10 @@ export default class GamePageView extends View {
         ]).getContainer<HTMLButtonElement>();
         buttonCheck.disabled = true;
         const logic: GameLogic = new GameLogic();
+        const buttonAutoComplete: HTMLButtonElement = new Component('button', 'autocomplete', 'Autocomplete', [
+            'button-autocomplete',
+        ]).getContainer<HTMLButtonElement>();
+        buttonAutoComplete.addEventListener('click', () => logic.autoComplete());
         const levelRoundContainer: HTMLDivElement = GamePageView.createLevelRoundContainer(logic);
         const translateContainer: HTMLDivElement = new Component('div', '', '', [
             'translate-container',
@@ -80,11 +84,12 @@ export default class GamePageView extends View {
             resultContainer,
             resourcesContainer,
             buttonCheck,
+            buttonAutoComplete,
             userIteractionContainer,
             translateContainer,
             audio
         );
-        buttonContainer.setChildren(buttonCheck);
+        buttonContainer.setChildren(buttonCheck, buttonAutoComplete);
         gameArea.setChildren(
             userIteractionContainer,
             translateContainer,

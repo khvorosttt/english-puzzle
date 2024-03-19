@@ -26,6 +26,8 @@ export default class GameLogic {
 
     private checkButton: HTMLButtonElement | null;
 
+    private buttonAutoComplete: HTMLButtonElement | null;
+
     private resultContainer: HTMLDivElement | null;
 
     private resourcesContainer: HTMLDivElement | null;
@@ -40,8 +42,6 @@ export default class GameLogic {
 
     private audio: HTMLAudioElement | null;
 
-    private img: HTMLImageElement;
-
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -51,12 +51,12 @@ export default class GameLogic {
         this.resultContainer = null;
         this.resourcesContainer = null;
         this.checkButton = null;
+        this.buttonAutoComplete = null;
         this.continueState = false;
         this.userIteractionContainer = null;
         this.levelRoundContainer = null;
         this.translateContainer = null;
         this.audio = null;
-        this.img = new Image();
     }
 
     initLevel() {
@@ -76,7 +76,6 @@ export default class GameLogic {
         this.createResourceBlocks();
         this.resultContainer?.replaceChildren();
         this.createResultBlocks();
-        this.img.src = `${IMG_PATH}${this.roundInfo.levelData.cutSrc}`;
         isNull(this.userIteractionContainer);
         const hideImgButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.hide-img-button');
         isNull(hideImgButton);
@@ -95,6 +94,47 @@ export default class GameLogic {
             roundList.append(roundItem);
             roundItem.addEventListener('click', (event) => this.roundClick.bind(this)(event));
         }
+    }
+
+    autoComplete() {
+        if (this.countSentence < 10) {
+            const cardsAnswer: HTMLDivElement[] = this.resultBlocks.filter((block) =>
+                block.classList.contains('full-answer')
+            );
+            console.log(cardsAnswer);
+            const cardsResources: HTMLDivElement[] = this.wordBlocks.filter((block) =>
+                block.classList.contains('full-resource')
+            );
+            isNull(cardsResources);
+            isNull(cardsResources);
+            const cards: HTMLDivElement[] = [...cardsAnswer, ...cardsResources];
+            cards.forEach((card) => {
+                card.classList.add('full-answer');
+                card.classList.remove('full-resource');
+            });
+            console.log(cards);
+            GameLogic.sortCards(cards);
+            isNull(this.resultContainer);
+            const sentenceContainer: NodeListOf<HTMLDivElement> =
+                this.resultContainer.querySelectorAll('.sentence-block');
+            const answers: HTMLDivElement = <HTMLDivElement>sentenceContainer[this.countSentence];
+            answers.replaceChildren();
+            answers.append(...cards);
+            this.resultBlocks = [...cards];
+            this.checkSentence();
+            isNull(this.checkButton);
+            this.checkButton.disabled = false;
+            isNull(this.buttonAutoComplete);
+            this.buttonAutoComplete.disabled = true;
+        }
+    }
+
+    static sortCards(cards: HTMLDivElement[]) {
+        cards.sort((a, b) => {
+            const idA: number = Number(a.id.split('_').pop());
+            const idB: number = Number(b.id.split('_').pop());
+            return idA - idB;
+        });
     }
 
     roundClick(event: Event) {
@@ -134,6 +174,7 @@ export default class GameLogic {
         resultContainer: HTMLDivElement,
         resourcesContainer: HTMLDivElement,
         checkButton: HTMLButtonElement,
+        buttonAutoComplete: HTMLButtonElement,
         userIteractionContainer: HTMLDivElement,
         translateContainer: HTMLDivElement,
         audio: HTMLAudioElement
@@ -141,6 +182,7 @@ export default class GameLogic {
         this.resultContainer = resultContainer;
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
+        this.buttonAutoComplete = buttonAutoComplete;
         this.userIteractionContainer = userIteractionContainer;
         this.levelRoundContainer = userIteractionContainer.querySelector('.level-round-container');
         this.translateContainer = translateContainer;
@@ -535,6 +577,8 @@ export default class GameLogic {
                 }
                 this.nextSentence();
                 trueValues = 0;
+                isNull(this.buttonAutoComplete);
+                this.buttonAutoComplete.disabled = false;
             }
         }
         if (trueValues === this.resultBlocks.length && !this.continueState) {
