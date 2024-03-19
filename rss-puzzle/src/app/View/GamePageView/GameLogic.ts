@@ -45,8 +45,12 @@ export default class GameLogic {
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
+        this.setCurrentRound();
         this.levelInfo = new LevelInfoModel(this.level);
         this.roundInfo = this.levelInfo.getRound(this.round);
+        console.log(this.roundInfo);
+        console.log(this.level);
+        console.log(this.round);
         this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
         this.resultContainer = null;
         this.resourcesContainer = null;
@@ -59,14 +63,42 @@ export default class GameLogic {
         this.audio = null;
     }
 
+    setCurrentRound() {
+        const levelRound: string | null = localStorage.getItem('level_round');
+        let level: number = 1;
+        let round: number = 0;
+        if (levelRound === null) {
+            this.levelInfo = new LevelInfoModel(this.level);
+            this.roundInfo = this.levelInfo.getRound(this.round);
+            return;
+        }
+        const temp: string[] = levelRound.split('_');
+        level = Number(temp[0]);
+        round = Number(temp[1]);
+        const tempLevelInfo: LevelInfoModel = new LevelInfoModel(level);
+        if (round < tempLevelInfo.getRounds().length - 1) {
+            this.round += 1;
+        } else if (level === 6) {
+            this.level = 1;
+            this.round = 0;
+        } else {
+            this.level += 1;
+            this.levelInfo = new LevelInfoModel(this.level);
+            this.round = 0;
+        }
+    }
+
     initLevel() {
         this.levelInfo = new LevelInfoModel(this.level);
-        this.round = 0;
         isNull(this.levelRoundContainer);
         const roundList: HTMLDivElement | null = this.levelRoundContainer.querySelector('.round-list');
         isNull(roundList);
         this.initRoundList(roundList);
         this.initRound();
+        isNull(this.levelRoundContainer);
+        const levelButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.level-button');
+        isNull(levelButton);
+        levelButton.textContent = `Level ${this.level}`;
     }
 
     initRound() {
@@ -94,6 +126,10 @@ export default class GameLogic {
             roundList.append(roundItem);
             roundItem.addEventListener('click', (event) => this.roundClick.bind(this)(event));
         }
+        isNull(this.levelRoundContainer);
+        const roundButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.round-button');
+        isNull(roundButton);
+        roundButton.textContent = `Round ${this.round + 1}`;
     }
 
     autoComplete() {
@@ -101,7 +137,6 @@ export default class GameLogic {
             const cardsAnswer: HTMLDivElement[] = this.resultBlocks.filter((block) =>
                 block.classList.contains('full-answer')
             );
-            console.log(cardsAnswer);
             const cardsResources: HTMLDivElement[] = this.wordBlocks.filter((block) =>
                 block.classList.contains('full-resource')
             );
@@ -112,7 +147,6 @@ export default class GameLogic {
                 card.classList.add('full-answer');
                 card.classList.remove('full-resource');
             });
-            console.log(cards);
             GameLogic.sortCards(cards);
             isNull(this.resultContainer);
             const sentenceContainer: NodeListOf<HTMLDivElement> =
@@ -164,6 +198,7 @@ export default class GameLogic {
         isNull(levelButton);
         levelButton.textContent = currentElem.textContent;
         this.levelRoundContainer.querySelector('.level-list')?.classList.remove('showed');
+        this.round = 0;
         this.initLevel();
         const roundButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.round-button');
         isNull(roundButton);
@@ -560,6 +595,7 @@ export default class GameLogic {
                 this.countSentence += 1;
                 audioButton.classList.remove('show');
                 this.translateContainer.classList.remove('show');
+                localStorage.setItem('level_round', `${this.level}_${this.round}`);
                 this.showFullImage();
             } else {
                 if (this.countSentence === 10) {
@@ -679,11 +715,49 @@ export default class GameLogic {
     goToNextRound() {
         this.resourcesContainer?.replaceChildren();
         this.resultContainer?.replaceChildren();
-        if (this.round < this.levelInfo.getRounds().length) {
+        if (this.round < this.levelInfo.getRounds().length - 1) {
             this.round += 1;
+            this.roundInfo = this.levelInfo.getRound(this.round);
+            this.changeRound();
+            this.initRound();
+        } else if (this.level < 6) {
+            this.level += 1;
+            this.round = 0;
+            this.changeLevel();
+            this.changeRound();
+        } else if (this.level === 6) {
+            this.level = 1;
+            this.round = 0;
+            this.changeLevel();
+            this.changeRound();
         }
-        this.roundInfo = this.levelInfo.getRound(this.round);
-        this.countSentence = 0;
         this.goToNextSentence();
+    }
+
+    changeRound() {
+        isNull(this.levelRoundContainer);
+        const beforeSelected: HTMLLIElement | null = this.levelRoundContainer.querySelector('.round-selected');
+        isNull(beforeSelected);
+        beforeSelected.classList.remove('round-selected');
+        const newRound: HTMLLIElement | null = this.levelRoundContainer.querySelector(`#round_${this.round}`);
+        isNull(newRound);
+        newRound.classList.add('round-selected');
+        const roundButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.round-button');
+        isNull(roundButton);
+        roundButton.textContent = `Round ${this.round + 1}`;
+    }
+
+    changeLevel() {
+        isNull(this.levelRoundContainer);
+        const beforeSelected: HTMLLIElement | null = this.levelRoundContainer.querySelector('.level-selected');
+        isNull(beforeSelected);
+        beforeSelected.classList.remove('level-selected');
+        const newRound: HTMLLIElement | null = this.levelRoundContainer.querySelector(`#level_${this.level}`);
+        isNull(newRound);
+        newRound.classList.add('level-selected');
+        const levelButton: HTMLButtonElement | null = this.levelRoundContainer.querySelector('.level-button');
+        isNull(levelButton);
+        levelButton.textContent = `level ${this.level}`;
+        this.initLevel();
     }
 }
