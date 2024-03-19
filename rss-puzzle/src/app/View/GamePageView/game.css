@@ -31,7 +31,8 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 5px;
-    gap: 1%;
+    gap: 0.5%;
+    color: red;
 }
 
 .resources-container {
@@ -44,6 +45,8 @@
     align-items: center;
     justify-content: space-around;
     gap: 2%;
+    color: red;
+    font-weight: bolder;
 }
 
 .buttons-container {

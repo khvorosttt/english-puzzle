@@ -5,6 +5,7 @@ import LevelInfoModel from '../../Model/LevelInfoModel';
 import { RoundInterface } from '../../Model/interface';
 
 const AUDIO_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
+const IMG_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
 
 export default class GameLogic {
     private level: number = 1;
@@ -39,6 +40,8 @@ export default class GameLogic {
 
     private audio: HTMLAudioElement | null;
 
+    private img: HTMLImageElement;
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -53,6 +56,7 @@ export default class GameLogic {
         this.levelRoundContainer = null;
         this.translateContainer = null;
         this.audio = null;
+        this.img = new Image();
     }
 
     initLevel() {
@@ -72,6 +76,12 @@ export default class GameLogic {
         this.createResourceBlocks();
         this.resultContainer?.replaceChildren();
         this.createResultBlocks();
+        this.img.src = `${IMG_PATH}${this.roundInfo.levelData.cutSrc}`;
+        // isNull(this.resultContainer);
+        // this.resultContainer.style.background = `url(${IMG_PATH}${this.roundInfo.levelData.cutSrc})`;
+        // this.resultContainer.style.backgroundPosition = `center`;
+        // this.resultContainer.style.backgroundRepeat = `no-repeat`;
+        // this.resultContainer.style.backgroundSize = `cover`;
     }
 
     initRoundList(roundList: HTMLDivElement) {
@@ -149,9 +159,13 @@ export default class GameLogic {
     createResourceBlocks() {
         isNull(this.resourcesContainer);
         this.resourcesContainer.replaceChildren();
+        // isNull(this.resultContainer);
+        // this.resultContainer.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
+        // this.resultContainer.style.backgroundSize = `${700}px ${400}px`;
         this.wordBlocks.length = 0;
         const countSymbols: number = this.resoucesSentence.join('').length;
-        const coeffSymbol: number = 90 / countSymbols;
+        const coeffSymbol: number = 670 / countSymbols;
+        let positionX: number = 0;
         this.resoucesSentence.forEach((word, index) => {
             const wordBlock: HTMLDivElement = new Component(
                 'div',
@@ -161,7 +175,7 @@ export default class GameLogic {
                 { eventName: 'click', callback: (event) => this.wordClick(event) }
             ).getContainer<HTMLDivElement>();
             wordBlock.draggable = true;
-            wordBlock.style.width = `${coeffSymbol * word.length}%`;
+            wordBlock.style.width = `${coeffSymbol * word.length}px`;
             wordBlock.addEventListener('dragstart', (event) => GameLogic.dragStart(event));
             wordBlock.addEventListener('dragend', (event) => this.dragEnd.bind(this)(event));
             this.wordBlocks.push(wordBlock);
@@ -172,6 +186,10 @@ export default class GameLogic {
             } else {
                 wordBlock.classList.add('middle-puzzle');
             }
+            wordBlock.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
+            wordBlock.style.backgroundSize = `${700}px ${400}px`;
+            wordBlock.style.backgroundPosition = `-${positionX}px -${40 * this.countSentence}px`;
+            positionX += coeffSymbol * word.length;
         });
         isNull(this.resourcesContainer);
         GameLogic.mixWords(this.wordBlocks);
