@@ -192,9 +192,9 @@
 .translate-button:hover,
 .audio-hide-button:hover,
 .game-logout-button:hover {
-    background-color: #662261;
-    border: 1px solid #f08a9d;
-    color: #f08a9d;
+    background-color: #bf82c5;
+    border: 1px solid #662261;
+    color: #662261;
 }
 
 .level-list,
@@ -241,13 +241,33 @@
 .translate-button,
 .game-logout-button,
 .audio-button,
-.audio-hide-button {
+.audio-hide-button,
+.hide-img-button {
     cursor: pointer;
     border-radius: 5px;
     padding: 5px;
     background-color: #f08a9d;
     border: 1px solid #662261;
     color: #662261;
+}
+
+.hide-img-button {
+    width: 35px;
+    padding: 10px;
+    background-image: url('../../../imgs/full-puzzle.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+
+.active-hide-img {
+    background-image: url('../../../imgs/empty-puzzle.svg');
+}
+
+.hide-img-button:hover {
+    background-color: #bf82c5;
+    border: 1px solid #58244f;
+    color: #58244f;
 }
 
 .audio-button {

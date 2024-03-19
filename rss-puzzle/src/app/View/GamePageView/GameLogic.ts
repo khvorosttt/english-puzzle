@@ -154,14 +154,40 @@ export default class GameLogic {
         });
         this.audio = audio;
         this.initLevel();
+        const hideImgButton: HTMLButtonElement | null = userIteractionContainer.querySelector('.hide-img-button');
+        isNull(hideImgButton);
+        this.initHideImgButton(hideImgButton);
+    }
+
+    initHideImgButton(button: HTMLButtonElement) {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active-hide-img');
+            const cardsAnswer: NodeListOf<HTMLDivElement> | undefined =
+                this.resultContainer?.querySelectorAll('.full-answer');
+            const cardsResources: NodeListOf<HTMLDivElement> | undefined =
+                this.resourcesContainer?.querySelectorAll('.full-resource');
+            isNull(cardsAnswer);
+            isNull(cardsResources);
+            const cards: HTMLDivElement[] = [...cardsAnswer, ...cardsResources];
+            if (button.classList.contains('active-hide-img')) {
+                cards.forEach((card) => {
+                    const copyCard = card;
+                    if (!copyCard.classList.contains('non-active')) {
+                        copyCard.style.backgroundImage = '';
+                    }
+                });
+            } else {
+                cards.forEach((card) => {
+                    const copyCard = card;
+                    copyCard.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
+                });
+            }
+        });
     }
 
     createResourceBlocks() {
         isNull(this.resourcesContainer);
         this.resourcesContainer.replaceChildren();
-        // isNull(this.resultContainer);
-        // this.resultContainer.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
-        // this.resultContainer.style.backgroundSize = `${700}px ${400}px`;
         this.wordBlocks.length = 0;
         const countSymbols: number = this.resoucesSentence.join('').length;
         const coeffSymbol: number = 670 / countSymbols;
@@ -486,6 +512,7 @@ export default class GameLogic {
                 const temp: HTMLDivElement = block;
                 temp.classList.add('non-active');
                 temp.draggable = false;
+                temp.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
             });
             this.continueState = true;
             this.checkButton.textContent = 'Continue';

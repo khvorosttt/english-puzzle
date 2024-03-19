@@ -32,6 +32,9 @@ export default class GamePageView extends View {
         const userIteractionContainer: HTMLDivElement = new Component('div', '', '', [
             'user-iteraction-container',
         ]).getContainer<HTMLDivElement>();
+        const hideImgButton: HTMLButtonElement = new Component('button', '', '', [
+            'hide-img-button',
+        ]).getContainer<HTMLButtonElement>();
         const translateButton: HTMLButtonElement = new Component('button', 'translate', `Translate ❌`, [
             'translate-button',
         ]).getContainer<HTMLButtonElement>();
@@ -63,6 +66,7 @@ export default class GamePageView extends View {
         );
         userIteractionContainer.append(
             levelRoundContainer,
+            hideImgButton,
             translateButton,
             logoutButton,
             audioHideButton,
@@ -105,19 +109,6 @@ export default class GamePageView extends View {
         });
     }
 
-    // static audioHideButtonEvent(audioHideButton: HTMLButtonElement, audioButton: HTMLButtonElement) {
-    //     const copyHideAudioButton: HTMLButtonElement = audioHideButton;
-    //     audioHideButton.addEventListener('click', () => {
-    //         audioButton.classList.toggle('show');
-    //         copyHideAudioButton.classList.toggle('active-button');
-    //         if (audioButton.classList.contains('show')) {
-    //             copyHideAudioButton.textContent = 'Audio 👀';
-    //         } else {
-    //             copyHideAudioButton.textContent = 'Audio ❌';
-    //         }
-    //     });
-    // }
-
     static buttonHideEvent(event: Event, element: HTMLElement, text: string) {
         const button: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
         element.classList.toggle('show');
@@ -128,17 +119,6 @@ export default class GamePageView extends View {
             button.textContent = `${text} ❌`;
         }
     }
-
-    // static translateEvent(event: Event, translateContainer: HTMLDivElement) {
-    //     const translateButton: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
-    //     translateContainer.classList.toggle('show');
-    //     translateButton.classList.toggle('active-button');
-    //     if (translateContainer.classList.contains('show')) {
-    //         translateButton.textContent = 'Translate 👀';
-    //     } else {
-    //         translateButton.textContent = 'Translate ❌';
-    //     }
-    // }
 
     static createLevelRoundContainer(logic: GameLogic) {
         const levelRoundContainer: HTMLDivElement = new Component('div', '', '', [
