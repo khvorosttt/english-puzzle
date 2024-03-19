@@ -28,6 +28,7 @@ export default class GamePageView extends View {
         const levelRoundContainer: HTMLDivElement = GamePageView.createLevelRoundContainer(logic);
         const translateContainer: HTMLDivElement = new Component('div', '', '', [
             'translate-container',
+            'show',
         ]).getContainer<HTMLDivElement>();
         const userIteractionContainer: HTMLDivElement = new Component('div', '', '', [
             'user-iteraction-container',
@@ -35,8 +36,9 @@ export default class GamePageView extends View {
         const hideImgButton: HTMLButtonElement = new Component('button', '', '', [
             'hide-img-button',
         ]).getContainer<HTMLButtonElement>();
-        const translateButton: HTMLButtonElement = new Component('button', 'translate', `Translate ❌`, [
+        const translateButton: HTMLButtonElement = new Component('button', 'translate', `Translate 👀`, [
             'translate-button',
+            'active-button',
         ]).getContainer<HTMLButtonElement>();
         translateButton.addEventListener('click', (event: Event) =>
             GamePageView.buttonHideEvent(event, translateContainer, 'Translate')
@@ -54,12 +56,14 @@ export default class GamePageView extends View {
         const audio: HTMLAudioElement = new Component('audio', '', '', [
             'audio-element',
         ]).getContainer<HTMLAudioElement>();
-        const audioButton: HTMLButtonElement = new Component('button', '', `🔇`, [
+        const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
             'audio-button',
+            'show',
         ]).getContainer<HTMLButtonElement>();
         GamePageView.audioEvent(audio, audioButton);
-        const audioHideButton: HTMLButtonElement = new Component('button', '', `Audio ❌`, [
+        const audioHideButton: HTMLButtonElement = new Component('button', '', `Audio 👀`, [
             'audio-hide-button',
+            'active-button',
         ]).getContainer<HTMLButtonElement>();
         audioHideButton.addEventListener('click', (event: Event) =>
             GamePageView.buttonHideEvent(event, audioButton, 'Audio')
@@ -90,6 +94,7 @@ export default class GamePageView extends View {
             audio
         );
         this.container?.append(gameArea.getContainer<HTMLDivElement>());
+        GamePageView.initHint(logic, hideImgButton, translateButton, translateContainer, audioHideButton, audioButton);
     }
 
     static audioEvent(audio: HTMLAudioElement, audioButton: HTMLButtonElement) {
@@ -113,10 +118,17 @@ export default class GamePageView extends View {
         const button: HTMLButtonElement = <HTMLButtonElement>event.currentTarget;
         element.classList.toggle('show');
         button.classList.toggle('active-button');
-        if (element.classList.contains('show')) {
-            button.textContent = `${text} 👀`;
+        GamePageView.changeShowText(button, text);
+    }
+
+    static changeShowText(button: HTMLButtonElement, text: string) {
+        const copyButton = button;
+        if (copyButton.classList.contains('active-button')) {
+            copyButton.textContent = `${text} 👀`;
+            localStorage.setItem(`${text}Hint`, 'on');
         } else {
-            button.textContent = `${text} ❌`;
+            copyButton.textContent = `${text} ❌`;
+            localStorage.setItem(`${text}Hint`, 'off');
         }
     }
 
@@ -154,5 +166,43 @@ export default class GamePageView extends View {
         roundContainer.append(roundButton, roundList);
         levelRoundContainer.append(levelContainer, roundContainer);
         return levelRoundContainer;
+    }
+
+    static initHint(
+        logic: GameLogic,
+        hideImgButton: HTMLButtonElement,
+        translateButton: HTMLButtonElement,
+        translateContainer: HTMLDivElement,
+        audioHideButton: HTMLButtonElement,
+        audioButton: HTMLButtonElement
+    ) {
+        const hideState: string | null = localStorage.getItem('hideImg');
+        const translateState: string | null = localStorage.getItem('TranslateHint');
+        const audioHideState: string | null = localStorage.getItem('AudioHint');
+        if (hideState === 'off') {
+            hideImgButton.classList.add('active-hide-img');
+            logic.initHideImgButton(hideImgButton);
+        } else if (hideState === 'on') {
+            hideImgButton.classList.remove('active-hide-img');
+            logic.initHideImgButton(hideImgButton);
+        }
+        if (translateState === 'off') {
+            translateButton.classList.remove('active-button');
+            translateContainer.classList.remove('show');
+            GamePageView.changeShowText(translateButton, 'Translate');
+        } else if (translateState === 'on') {
+            translateButton.classList.add('active-button');
+            translateContainer.classList.add('show');
+            GamePageView.changeShowText(translateButton, 'Translate');
+        }
+        if (audioHideState === 'off') {
+            audioHideButton.classList.remove('active-button');
+            audioButton.classList.remove('show');
+            GamePageView.changeShowText(audioHideButton, 'Audio');
+        } else if (audioHideState === 'on') {
+            audioHideButton.classList.add('active-button');
+            audioButton.classList.add('show');
+            GamePageView.changeShowText(audioHideButton, 'Audio');
+        }
     }
 }

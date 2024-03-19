@@ -77,11 +77,6 @@ export default class GameLogic {
         this.resultContainer?.replaceChildren();
         this.createResultBlocks();
         this.img.src = `${IMG_PATH}${this.roundInfo.levelData.cutSrc}`;
-        // isNull(this.resultContainer);
-        // this.resultContainer.style.background = `url(${IMG_PATH}${this.roundInfo.levelData.cutSrc})`;
-        // this.resultContainer.style.backgroundPosition = `center`;
-        // this.resultContainer.style.backgroundRepeat = `no-repeat`;
-        // this.resultContainer.style.backgroundSize = `cover`;
     }
 
     initRoundList(roundList: HTMLDivElement) {
@@ -156,33 +151,39 @@ export default class GameLogic {
         this.initLevel();
         const hideImgButton: HTMLButtonElement | null = userIteractionContainer.querySelector('.hide-img-button');
         isNull(hideImgButton);
-        this.initHideImgButton(hideImgButton);
+        this.initEventHideImgButton(hideImgButton);
+    }
+
+    initEventHideImgButton(button: HTMLButtonElement) {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active-hide-img');
+            this.initHideImgButton(button);
+        });
     }
 
     initHideImgButton(button: HTMLButtonElement) {
-        button.addEventListener('click', () => {
-            button.classList.toggle('active-hide-img');
-            const cardsAnswer: NodeListOf<HTMLDivElement> | undefined =
-                this.resultContainer?.querySelectorAll('.full-answer');
-            const cardsResources: NodeListOf<HTMLDivElement> | undefined =
-                this.resourcesContainer?.querySelectorAll('.full-resource');
-            isNull(cardsAnswer);
-            isNull(cardsResources);
-            const cards: HTMLDivElement[] = [...cardsAnswer, ...cardsResources];
-            if (button.classList.contains('active-hide-img')) {
-                cards.forEach((card) => {
-                    const copyCard = card;
-                    if (!copyCard.classList.contains('non-active')) {
-                        copyCard.style.backgroundImage = '';
-                    }
-                });
-            } else {
-                cards.forEach((card) => {
-                    const copyCard = card;
-                    copyCard.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
-                });
-            }
-        });
+        const cardsAnswer: NodeListOf<HTMLDivElement> | undefined =
+            this.resultContainer?.querySelectorAll('.full-answer');
+        const cardsResources: NodeListOf<HTMLDivElement> | undefined =
+            this.resourcesContainer?.querySelectorAll('.full-resource');
+        isNull(cardsAnswer);
+        isNull(cardsResources);
+        const cards: HTMLDivElement[] = [...cardsAnswer, ...cardsResources];
+        if (button.classList.contains('active-hide-img')) {
+            cards.forEach((card) => {
+                const copyCard = card;
+                if (!copyCard.classList.contains('non-active')) {
+                    copyCard.style.backgroundImage = '';
+                }
+            });
+            localStorage.setItem('hideImg', 'off');
+        } else {
+            cards.forEach((card) => {
+                const copyCard = card;
+                copyCard.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
+            });
+            localStorage.setItem('hideImg', 'on');
+        }
     }
 
     createResourceBlocks() {
