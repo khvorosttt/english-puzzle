@@ -77,6 +77,10 @@ export default class GameLogic {
         this.resultContainer?.replaceChildren();
         this.createResultBlocks();
         this.img.src = `${IMG_PATH}${this.roundInfo.levelData.cutSrc}`;
+        isNull(this.userIteractionContainer);
+        const hideImgButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.hide-img-button');
+        isNull(hideImgButton);
+        this.initHideImgButton(hideImgButton);
     }
 
     initRoundList(roundList: HTMLDivElement) {
@@ -478,20 +482,25 @@ export default class GameLogic {
         let trueValues: number = 0;
         isNull(this.checkButton);
         isNull(this.resultContainer);
-        const sentenceContainer: NodeListOf<HTMLDivElement> = this.resultContainer.querySelectorAll('.sentence-block');
-        const answers: NodeList = sentenceContainer[this.countSentence].childNodes;
-        let sequenceOrder = 0;
-        answers.forEach((block) => {
-            const currentBlock: HTMLDivElement = <HTMLDivElement>block;
-            const order: number = Number(currentBlock.id.split('_').pop());
-            if (order !== sequenceOrder) {
-                currentBlock.classList.add('false-result');
-            } else {
-                currentBlock.classList.add('true-result');
-                trueValues += 1;
+        if (this.countSentence < 10) {
+            const sentenceContainer: NodeListOf<HTMLDivElement> =
+                this.resultContainer.querySelectorAll('.sentence-block');
+            const answers: NodeList = sentenceContainer[this.countSentence].childNodes;
+            let sequenceOrder = 0;
+            if (this.countSentence < 10) {
+                answers.forEach((block) => {
+                    const currentBlock: HTMLDivElement = <HTMLDivElement>block;
+                    const order: number = Number(currentBlock.id.split('_').pop());
+                    if (order !== sequenceOrder) {
+                        currentBlock.classList.add('false-result');
+                    } else {
+                        currentBlock.classList.add('true-result');
+                        trueValues += 1;
+                    }
+                    sequenceOrder += 1;
+                });
             }
-            sequenceOrder += 1;
-        });
+        }
         isNull(this.userIteractionContainer);
         const audioButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.audio-button');
         const audioHideButton: HTMLButtonElement | null =
@@ -503,10 +512,30 @@ export default class GameLogic {
         isNull(translateButton);
         isNull(this.translateContainer);
         if (this.continueState) {
-            GameLogic.removeClassIfNotContains(audioHideButton, audioButton, 'active-button', 'show');
-            GameLogic.removeClassIfNotContains(translateButton, this.translateContainer, 'active-button', 'show');
-            this.nextSentence();
-            trueValues = 0;
+            if (this.countSentence === 9) {
+                this.checkButton.disabled = true;
+                this.showFullImage();
+                this.countSentence += 1;
+                audioButton.classList.remove('show');
+                this.translateContainer.classList.remove('show');
+                this.showFullImage();
+            } else {
+                if (this.countSentence === 10) {
+                    GameLogic.addClassIfContains(audioHideButton, audioButton, 'active-button', 'show');
+                    GameLogic.addClassIfContains(translateButton, this.translateContainer, 'active-button', 'show');
+                } else {
+                    GameLogic.removeClassIfNotContains(audioHideButton, audioButton, 'active-button', 'show');
+                    GameLogic.removeClassIfNotContains(
+                        translateButton,
+                        this.translateContainer,
+                        'active-button',
+                        'show'
+                    );
+                    this.resultContainer.classList.remove('full-result');
+                }
+                this.nextSentence();
+                trueValues = 0;
+            }
         }
         if (trueValues === this.resultBlocks.length && !this.continueState) {
             this.resultBlocks.forEach((block: HTMLDivElement) => {
@@ -522,6 +551,41 @@ export default class GameLogic {
         }
     }
 
+    showFullImage() {
+        const cards: NodeListOf<HTMLDivElement> | undefined = this.resultContainer?.querySelectorAll('.full-answer');
+        isNull(cards);
+        isNull(this.resultContainer);
+        this.resultContainer.classList.add('full-result');
+        cards.forEach((card) => {
+            card.classList.add('hide-card');
+        });
+        setTimeout(this.setFullImgContainer.bind(this), 2000);
+    }
+
+    setFullImgContainer() {
+        this.resultContainer?.replaceChildren();
+        const fullImgContainer: HTMLDivElement = new Component('div', '', '', [
+            'full-img-container',
+        ]).getContainer<HTMLDivElement>();
+        const imgContainer: HTMLDivElement = new Component('div', '', '', [
+            'img-container',
+        ]).getContainer<HTMLDivElement>();
+        imgContainer.style.backgroundImage = `url(${IMG_PATH}${this.roundInfo.levelData.imageSrc})`;
+        const infoContainer: HTMLDivElement = new Component('div', '', '', [
+            'info-container',
+        ]).getContainer<HTMLDivElement>();
+        const author: HTMLDivElement = new Component('div', '', '', ['author']).getContainer<HTMLDivElement>();
+        author.textContent = this.roundInfo.levelData.author;
+        const nameYear: HTMLDivElement = new Component('div', '', '', ['name-year']).getContainer<HTMLDivElement>();
+        nameYear.textContent = `${this.roundInfo.levelData.name} (${this.roundInfo.levelData.year})`;
+        infoContainer.append(author, nameYear);
+        fullImgContainer.append(imgContainer, infoContainer);
+        this.resultContainer?.append(fullImgContainer);
+        imgContainer.classList.add('active-full-img');
+        isNull(this.checkButton);
+        this.checkButton.disabled = false;
+    }
+
     static removeClassIfNotContains(
         element: HTMLElement,
         container: HTMLElement,
@@ -533,11 +597,22 @@ export default class GameLogic {
         }
     }
 
+    static addClassIfContains(
+        element: HTMLElement,
+        container: HTMLElement,
+        classContainsName: string,
+        className: string
+    ) {
+        if (element.classList.contains(classContainsName)) {
+            container.classList.add(className);
+        }
+    }
+
     nextSentence() {
         this.countSentence += 1;
         if (this.countSentence < 10) {
             this.goToNextSentence();
-        } else if (this.countSentence === 10) {
+        } else {
             this.goToNextRound();
         }
         this.continueState = false;
@@ -551,6 +626,10 @@ export default class GameLogic {
         this.createResultBlocks();
         isNull(this.checkButton);
         this.checkButton.disabled = true;
+        isNull(this.userIteractionContainer);
+        const hideImgButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.hide-img-button');
+        isNull(hideImgButton);
+        this.initHideImgButton(hideImgButton);
     }
 
     goToNextRound() {
