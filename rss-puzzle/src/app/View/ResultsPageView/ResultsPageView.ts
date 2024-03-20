@@ -1,11 +1,11 @@
 import LevelInfoModel from '../../Model/LevelInfoModel';
 import View from '../View';
 import { isNull } from '../../base-methods';
-import { RoundInterface } from '../../Model/interface';
+import { RoundInterface, WordInterface } from '../../Model/interface';
 import Component from '../../utils/base-component';
 import './results.css';
 import { Router } from '../../Router/Router';
-import { IMG_PATH } from '../GamePageView/GameLogic';
+import { AUDIO_PATH, IMG_PATH } from '../GamePageView/GameLogic';
 
 export default class ResultsPageView extends View {
     constructor(router: Router) {
@@ -32,19 +32,46 @@ export default class ResultsPageView extends View {
             'sentences-info-container',
         ]).getContainer<HTMLDivElement>();
         buttonContinue.addEventListener('click', () => ResultsPageView.continueButtonClick(router));
+        const audio: HTMLAudioElement = new Component('audio', '', '', [
+            'audio-element',
+        ]).getContainer<HTMLAudioElement>();
         tempRoundInfo.words.forEach((word) => {
             const sentenceContainer: HTMLDivElement = new Component('div', '', '', [
                 'sentence-container',
             ]).getContainer<HTMLDivElement>();
+            const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
+                'audio-button',
+                'show',
+            ]).getContainer<HTMLButtonElement>();
             const textContainer: HTMLDivElement = new Component('div', '', '', [
                 'text-container',
             ]).getContainer<HTMLDivElement>();
+            ResultsPageView.audioEvent(audio, audioButton, word);
             textContainer.textContent = word.textExample;
-            sentenceContainer.append(textContainer);
+            sentenceContainer.append(audioButton, textContainer);
             sentencesInfoContainer.append(sentenceContainer);
         });
         resultsContainer.append(sentencesInfoContainer, buttonContinue);
         this.container?.append(resultsContainer);
+    }
+
+    static audioEvent(audio: HTMLAudioElement, audioButton: HTMLButtonElement, word: WordInterface) {
+        const copyAudio: HTMLAudioElement = audio;
+        const copyButton: HTMLButtonElement = audioButton;
+        audioButton.addEventListener('click', () => {
+            copyButton.textContent = '🔊';
+            copyButton.textContent = '🔊';
+            copyButton.style.background = '#cc94c4';
+            copyButton.style.boxShadow = '-5px 10px 10px yellow';
+            copyAudio.currentTime = 0;
+            copyAudio.src = `${AUDIO_PATH}${word.audioExample}`;
+            audio.play();
+        });
+        audio.addEventListener('pause', () => {
+            copyButton.textContent = '🔇';
+            copyButton.style.background = '#f08a9d';
+            copyButton.style.boxShadow = 'none';
+        });
     }
 
     static continueButtonClick(router: Router) {

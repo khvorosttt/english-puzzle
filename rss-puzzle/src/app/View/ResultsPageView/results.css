@@ -77,6 +77,15 @@
 }
 
 .sentences-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
     height: 300px;
     width: 500px;
+}
+
+.sentence-container {
+    display: flex;
+    gap: 10px;
 }
