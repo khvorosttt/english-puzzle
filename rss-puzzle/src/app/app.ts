@@ -4,6 +4,7 @@ import { isNull } from './base-methods';
 import GamePageView from './View/GamePageView/GamePageView';
 import { PageInfo, Router } from './Router/Router';
 import LoginView from './View/Login/LoginView';
+import ResultsPageView from './View/ResultsPageView/ResultsPageView';
 
 export default class App {
     container: HTMLElement;
@@ -47,6 +48,13 @@ export default class App {
                 callback: () => {
                     const gameView = new GamePageView(this.router);
                     this.setView(gameView);
+                },
+            },
+            {
+                pagePath: 'results',
+                callback: () => {
+                    const resultsView = new ResultsPageView();
+                    this.setView(resultsView);
                 },
             },
         ];

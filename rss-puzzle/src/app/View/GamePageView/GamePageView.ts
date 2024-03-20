@@ -29,6 +29,10 @@ export default class GamePageView extends View {
             'button-autocomplete',
         ]).getContainer<HTMLButtonElement>();
         buttonAutoComplete.addEventListener('click', () => logic.autoComplete());
+        const buttonResults: HTMLButtonElement = new Component('button', 'results', 'Results', [
+            'button-results',
+        ]).getContainer<HTMLButtonElement>();
+        buttonResults.addEventListener('click', () => GamePageView.buttonResults(router));
         const levelRoundContainer: HTMLDivElement = GamePageView.createLevelRoundContainer(logic);
         const translateContainer: HTMLDivElement = new Component('div', '', '', [
             'translate-container',
@@ -85,11 +89,12 @@ export default class GamePageView extends View {
             resourcesContainer,
             buttonCheck,
             buttonAutoComplete,
+            buttonResults,
             userIteractionContainer,
             translateContainer,
             audio
         );
-        buttonContainer.setChildren(buttonCheck, buttonAutoComplete);
+        buttonContainer.setChildren(buttonCheck, buttonAutoComplete, buttonResults);
         gameArea.setChildren(
             userIteractionContainer,
             translateContainer,
@@ -209,5 +214,9 @@ export default class GamePageView extends View {
             audioButton.classList.add('show');
             GamePageView.changeShowText(audioHideButton, 'Audio');
         }
+    }
+
+    static buttonResults(router: Router) {
+        router.navigate('results');
     }
 }

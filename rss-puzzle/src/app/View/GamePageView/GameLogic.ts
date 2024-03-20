@@ -28,6 +28,8 @@ export default class GameLogic {
 
     private buttonAutoComplete: HTMLButtonElement | null;
 
+    private resultsButton: HTMLButtonElement | null;
+
     private resultContainer: HTMLDivElement | null;
 
     private resourcesContainer: HTMLDivElement | null;
@@ -48,14 +50,12 @@ export default class GameLogic {
         this.setCurrentRound();
         this.levelInfo = new LevelInfoModel(this.level);
         this.roundInfo = this.levelInfo.getRound(this.round);
-        console.log(this.roundInfo);
-        console.log(this.level);
-        console.log(this.round);
         this.resoucesSentence = this.roundInfo.words[this.countSentence].textExample.split(' ');
         this.resultContainer = null;
         this.resourcesContainer = null;
         this.checkButton = null;
         this.buttonAutoComplete = null;
+        this.resultsButton = null;
         this.continueState = false;
         this.userIteractionContainer = null;
         this.levelRoundContainer = null;
@@ -77,12 +77,12 @@ export default class GameLogic {
         round = Number(temp[1]);
         const tempLevelInfo: LevelInfoModel = new LevelInfoModel(level);
         if (round < tempLevelInfo.getRounds().length - 1) {
-            this.round += 1;
+            this.round = round + 1;
         } else if (level === 6) {
             this.level = 1;
             this.round = 0;
         } else {
-            this.level += 1;
+            this.level = level + 1;
             this.levelInfo = new LevelInfoModel(this.level);
             this.round = 0;
         }
@@ -210,6 +210,7 @@ export default class GameLogic {
         resourcesContainer: HTMLDivElement,
         checkButton: HTMLButtonElement,
         buttonAutoComplete: HTMLButtonElement,
+        resultsButton: HTMLButtonElement,
         userIteractionContainer: HTMLDivElement,
         translateContainer: HTMLDivElement,
         audio: HTMLAudioElement
@@ -218,6 +219,7 @@ export default class GameLogic {
         this.resourcesContainer = resourcesContainer;
         this.checkButton = checkButton;
         this.buttonAutoComplete = buttonAutoComplete;
+        this.resultsButton = resultsButton;
         this.userIteractionContainer = userIteractionContainer;
         this.levelRoundContainer = userIteractionContainer.querySelector('.level-round-container');
         this.translateContainer = translateContainer;
@@ -597,6 +599,8 @@ export default class GameLogic {
                 this.translateContainer.classList.remove('show');
                 localStorage.setItem('level_round', `${this.level}_${this.round}`);
                 this.showFullImage();
+                isNull(this.resultsButton);
+                this.resultsButton.classList.add('show');
             } else {
                 if (this.countSentence === 10) {
                     GameLogic.addClassIfContains(audioHideButton, audioButton, 'active-button', 'show');

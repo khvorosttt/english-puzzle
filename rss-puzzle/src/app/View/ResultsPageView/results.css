@@ -1,0 +1,24 @@
+.results-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: url(../../../imgs/startPage-background-2.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.results-container {
+    width: 650px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 20px;
+    background-color: rgb(255, 255, 255, 0.7);
+    border-radius: 50px;
+}

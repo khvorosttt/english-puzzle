@@ -135,7 +135,8 @@
 }
 
 .button-check,
-.button-autocomplete {
+.button-autocomplete,
+.button-results {
     border-radius: 15px;
     padding: 7px;
     font-size: 26px;
@@ -145,8 +146,13 @@
     opacity: 1;
 }
 
+.button-results {
+    opacity: 0;
+}
+
 .button-check:hover,
-.button-autocomplete:hover {
+.button-autocomplete:hover,
+.button-results:hover {
     background-color: #7e4c9e;
     border: 1px solid #f5b7ae;
     color: #f5b7ae;
