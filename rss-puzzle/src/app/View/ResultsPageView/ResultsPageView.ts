@@ -4,14 +4,15 @@ import { isNull } from '../../base-methods';
 import { RoundInterface } from '../../Model/interface';
 import Component from '../../utils/base-component';
 import './results.css';
+import { Router } from '../../Router/Router';
 
 export default class ResultsPageView extends View {
-    constructor() {
+    constructor(router: Router) {
         super(['results-page-container']);
-        this.createResultsContainer();
+        this.createResultsContainer(router);
     }
 
-    createResultsContainer() {
+    createResultsContainer(router: Router) {
         const levelRound: string | null = localStorage.getItem('level_round');
         isNull(levelRound);
         const temp: string[] = levelRound.split('_');
@@ -22,6 +23,10 @@ export default class ResultsPageView extends View {
         const resultsContainer: HTMLDivElement = new Component('div', '', '', [
             'results-container',
         ]).getContainer<HTMLDivElement>();
+        const buttonContinue: HTMLButtonElement = new Component('button', 'continue', 'Continue', [
+            'button-continue',
+        ]).getContainer<HTMLButtonElement>();
+        buttonContinue.addEventListener('click', () => ResultsPageView.continueButtonClick(router));
         tempRoundInfo.words.forEach((word) => {
             const sentenceContainer: HTMLDivElement = new Component('div', '', '', [
                 'sentence-container',
@@ -33,6 +38,11 @@ export default class ResultsPageView extends View {
             sentenceContainer.append(textContainer);
             resultsContainer.append(sentenceContainer);
         });
+        resultsContainer.append(buttonContinue);
         this.container?.append(resultsContainer);
+    }
+
+    static continueButtonClick(router: Router) {
+        router.navigate('game');
     }
 }

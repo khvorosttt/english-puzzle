@@ -22,3 +22,20 @@
     background-color: rgb(255, 255, 255, 0.7);
     border-radius: 50px;
 }
+
+.button-continue {
+    border-radius: 15px;
+    padding: 7px;
+    font-size: 26px;
+    background-color: #bf82c5;
+    border: 1px solid #58244f;
+    color: #58244f;
+    opacity: 1;
+}
+
+.button-continue:hover {
+    background-color: #7e4c9e;
+    border: 1px solid #f5b7ae;
+    color: #f5b7ae;
+    cursor: pointer;
+}

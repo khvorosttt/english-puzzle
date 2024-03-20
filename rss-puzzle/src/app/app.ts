@@ -53,7 +53,7 @@ export default class App {
             {
                 pagePath: 'results',
                 callback: () => {
-                    const resultsView = new ResultsPageView();
+                    const resultsView = new ResultsPageView(this.router);
                     this.setView(resultsView);
                 },
             },
