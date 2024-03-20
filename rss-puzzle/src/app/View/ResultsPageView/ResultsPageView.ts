@@ -35,7 +35,48 @@ export default class ResultsPageView extends View {
         const audio: HTMLAudioElement = new Component('audio', '', '', [
             'audio-element',
         ]).getContainer<HTMLAudioElement>();
-        tempRoundInfo.words.forEach((word) => {
+        ResultsPageView.createKnownSections(tempRoundInfo, sentencesInfoContainer, audio);
+        // tempRoundInfo.words.forEach((word) => {
+        //     const sentenceContainer: HTMLDivElement = new Component('div', '', '', [
+        //         'sentence-container',
+        //     ]).getContainer<HTMLDivElement>();
+        //     const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
+        //         'audio-button',
+        //         'show',
+        //     ]).getContainer<HTMLButtonElement>();
+        //     const textContainer: HTMLDivElement = new Component('div', '', '', [
+        //         'text-container',
+        //     ]).getContainer<HTMLDivElement>();
+        //     ResultsPageView.audioEvent(audio, audioButton, word);
+        //     textContainer.textContent = word.textExample;
+        //     sentenceContainer.append(audioButton, textContainer);
+        //     sentencesInfoContainer.append(sentenceContainer);
+        // });
+        resultsContainer.append(sentencesInfoContainer, buttonContinue);
+        this.container?.append(resultsContainer);
+    }
+
+    static createKnownSections(
+        roundInfo: RoundInterface,
+        sentencesInfoContainer: HTMLDivElement,
+        audio: HTMLAudioElement
+    ) {
+        const knownContainer: HTMLDivElement = new Component('div', '', '', [
+            'known-container',
+        ]).getContainer<HTMLDivElement>();
+        const nameKnown: HTMLHeadingElement = new Component('h1', '', 'I know', [
+            'known-name',
+        ]).getContainer<HTMLHeadingElement>();
+        const unknownContainer: HTMLDivElement = new Component('div', '', '', [
+            'unknown-container',
+        ]).getContainer<HTMLDivElement>();
+        const nameUnknown: HTMLHeadingElement = new Component('h1', '', "I don't know", [
+            'unknown-name',
+        ]).getContainer<HTMLHeadingElement>();
+        const staticString: string | null = localStorage.getItem('roundKnownInfo');
+        isNull(staticString);
+        const statistic: boolean[] = JSON.parse(staticString);
+        roundInfo.words.forEach((word, index) => {
             const sentenceContainer: HTMLDivElement = new Component('div', '', '', [
                 'sentence-container',
             ]).getContainer<HTMLDivElement>();
@@ -49,10 +90,13 @@ export default class ResultsPageView extends View {
             ResultsPageView.audioEvent(audio, audioButton, word);
             textContainer.textContent = word.textExample;
             sentenceContainer.append(audioButton, textContainer);
-            sentencesInfoContainer.append(sentenceContainer);
+            if (statistic[index]) {
+                knownContainer.append(sentenceContainer);
+            } else {
+                unknownContainer.append(sentenceContainer);
+            }
         });
-        resultsContainer.append(sentencesInfoContainer, buttonContinue);
-        this.container?.append(resultsContainer);
+        sentencesInfoContainer.append(nameKnown, knownContainer, nameUnknown, unknownContainer);
     }
 
     static audioEvent(audio: HTMLAudioElement, audioButton: HTMLButtonElement, word: WordInterface) {

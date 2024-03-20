@@ -44,6 +44,8 @@ export default class GameLogic {
 
     private audio: HTMLAudioElement | null;
 
+    private roundKnownInfo: boolean[];
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -61,6 +63,7 @@ export default class GameLogic {
         this.levelRoundContainer = null;
         this.translateContainer = null;
         this.audio = null;
+        this.roundKnownInfo = Array(10).fill(true);
     }
 
     setCurrentRound() {
@@ -159,6 +162,7 @@ export default class GameLogic {
             isNull(this.checkButton);
             this.checkButton.disabled = false;
             isNull(this.buttonAutoComplete);
+            this.roundKnownInfo[this.countSentence] = false;
             this.buttonAutoComplete.disabled = true;
         }
     }
@@ -590,6 +594,7 @@ export default class GameLogic {
         isNull(audioHideButton);
         isNull(translateButton);
         isNull(this.translateContainer);
+        isNull(this.buttonAutoComplete);
         if (this.continueState) {
             if (this.countSentence === 9) {
                 this.checkButton.disabled = true;
@@ -598,9 +603,11 @@ export default class GameLogic {
                 audioButton.classList.remove('show');
                 this.translateContainer.classList.remove('show');
                 localStorage.setItem('level_round', `${this.level}_${this.round}`);
+                localStorage.setItem('roundKnownInfo', JSON.stringify(this.roundKnownInfo));
                 this.showFullImage();
                 isNull(this.resultsButton);
                 this.resultsButton.classList.add('show');
+                this.buttonAutoComplete.disabled = true;
             } else {
                 if (this.countSentence === 10) {
                     GameLogic.addClassIfContains(audioHideButton, audioButton, 'active-button', 'show');
@@ -632,6 +639,7 @@ export default class GameLogic {
             this.checkButton.textContent = 'Continue';
             audioButton.classList.add('show');
             this.translateContainer.classList.add('show');
+            this.buttonAutoComplete.disabled = true;
         }
     }
 
