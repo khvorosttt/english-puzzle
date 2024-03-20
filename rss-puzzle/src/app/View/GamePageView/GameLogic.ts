@@ -4,8 +4,8 @@ import Coordinates from '../../Coordinates/Coordinates';
 import LevelInfoModel from '../../Model/LevelInfoModel';
 import { RoundInterface } from '../../Model/interface';
 
-const AUDIO_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
-const IMG_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
+export const AUDIO_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/';
+export const IMG_PATH: string = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/';
 
 export default class GameLogic {
     private level: number = 1;
