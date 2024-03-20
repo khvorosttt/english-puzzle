@@ -178,7 +178,7 @@
 
 .user-iteraction-container {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .level-round-container {
@@ -191,7 +191,7 @@
     cursor: pointer;
     border-radius: 5px;
     padding: 5px;
-    width: 80px;
+    width: 95px;
     background-color: #f08a9d;
     border: 1px solid #662261;
     color: #662261;
@@ -216,8 +216,9 @@
     height: 130px;
     background-color: #f08a9d;
     gap: 3px;
-    width: 80px;
+    width: 100px;
     border-radius: 5px;
+    z-index: 5;
 }
 
 .level-item,

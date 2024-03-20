@@ -36,22 +36,6 @@ export default class ResultsPageView extends View {
             'audio-element',
         ]).getContainer<HTMLAudioElement>();
         ResultsPageView.createKnownSections(tempRoundInfo, sentencesInfoContainer, audio);
-        // tempRoundInfo.words.forEach((word) => {
-        //     const sentenceContainer: HTMLDivElement = new Component('div', '', '', [
-        //         'sentence-container',
-        //     ]).getContainer<HTMLDivElement>();
-        //     const audioButton: HTMLButtonElement = new Component('button', '', `🔊`, [
-        //         'audio-button',
-        //         'show',
-        //     ]).getContainer<HTMLButtonElement>();
-        //     const textContainer: HTMLDivElement = new Component('div', '', '', [
-        //         'text-container',
-        //     ]).getContainer<HTMLDivElement>();
-        //     ResultsPageView.audioEvent(audio, audioButton, word);
-        //     textContainer.textContent = word.textExample;
-        //     sentenceContainer.append(audioButton, textContainer);
-        //     sentencesInfoContainer.append(sentenceContainer);
-        // });
         resultsContainer.append(sentencesInfoContainer, buttonContinue);
         this.container?.append(resultsContainer);
     }

@@ -156,10 +156,18 @@ export default class GamePageView extends View {
             'level-button',
         ]).getContainer<HTMLButtonElement>();
         const levelList: HTMLDivElement = new Component('div', '', '', ['level-list']).getContainer<HTMLDivElement>();
+        const completeLevelString: string | null = localStorage.getItem('completeLevel');
+        let completeLevel: number[] = [];
+        if (completeLevelString !== null) {
+            completeLevel = JSON.parse(completeLevelString);
+        }
         for (let i = 1; i <= 6; i += 1) {
             const levelItem: HTMLLIElement = new Component('div', `level_${i}`, `Level ${i}`, [
                 'level-item',
             ]).getContainer<HTMLLIElement>();
+            if (completeLevel.includes(i)) {
+                levelItem.textContent += '✔';
+            }
             if (i === 1) {
                 levelItem.classList.add('level-selected');
             }

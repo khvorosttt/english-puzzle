@@ -46,6 +46,8 @@ export default class GameLogic {
 
     private roundKnownInfo: boolean[];
 
+    private levelRoundComplete: number[][] = [];
+
     constructor() {
         this.wordBlocks = [];
         this.resultBlocks = [];
@@ -64,6 +66,15 @@ export default class GameLogic {
         this.translateContainer = null;
         this.audio = null;
         this.roundKnownInfo = Array(10).fill(true);
+        this.levelRoundComplete = GameLogic.setCompletes();
+    }
+
+    static setCompletes() {
+        const levelRoundCompleteString: string | null = localStorage.getItem('levelRoundComplete');
+        if (levelRoundCompleteString === null) {
+            return Array(6).fill(Array(0));
+        }
+        return JSON.parse(levelRoundCompleteString);
     }
 
     setCurrentRound() {
@@ -81,6 +92,7 @@ export default class GameLogic {
         const tempLevelInfo: LevelInfoModel = new LevelInfoModel(level);
         if (round < tempLevelInfo.getRounds().length - 1) {
             this.round = round + 1;
+            this.level = level;
         } else if (level === 6) {
             this.level = 1;
             this.round = 0;
@@ -115,6 +127,14 @@ export default class GameLogic {
         const hideImgButton: HTMLButtonElement | null = this.userIteractionContainer.querySelector('.hide-img-button');
         isNull(hideImgButton);
         this.initHideImgButton(hideImgButton);
+        this.continueState = false;
+        isNull(this.checkButton);
+        this.checkButton.textContent = 'Check';
+        this.checkButton.disabled = true;
+        isNull(this.buttonAutoComplete);
+        this.buttonAutoComplete.disabled = false;
+        isNull(this.resultsButton);
+        this.resultsButton.classList.remove('show');
     }
 
     initRoundList(roundList: HTMLDivElement) {
@@ -123,6 +143,9 @@ export default class GameLogic {
             const roundItem: HTMLLIElement = new Component('div', `round_${i}`, `Round ${i + 1}`, [
                 'round-item',
             ]).getContainer<HTMLLIElement>();
+            if (this.levelRoundComplete[this.level - 1].includes(i)) {
+                roundItem.textContent += '✔';
+            }
             if (i === this.round) {
                 roundItem.classList.add('round-selected');
             }
@@ -608,6 +631,12 @@ export default class GameLogic {
                 isNull(this.resultsButton);
                 this.resultsButton.classList.add('show');
                 this.buttonAutoComplete.disabled = true;
+                if (!this.levelRoundComplete[this.level - 1].includes(this.round)) {
+                    this.levelRoundComplete[this.level - 1].push(this.round);
+                }
+                localStorage.setItem('levelRoundComplete', JSON.stringify(this.levelRoundComplete));
+                this.setLevelCompleteState();
+                this.setRoundCompleteState();
             } else {
                 if (this.countSentence === 10) {
                     GameLogic.addClassIfContains(audioHideButton, audioButton, 'active-button', 'show');
@@ -641,6 +670,33 @@ export default class GameLogic {
             this.translateContainer.classList.add('show');
             this.buttonAutoComplete.disabled = true;
         }
+    }
+
+    setLevelCompleteState() {
+        isNull(this.levelRoundContainer);
+        const currentLevelLI: HTMLLIElement | null = this.levelRoundContainer.querySelector(`#level_${this.level}`);
+        if (this.levelRoundComplete[this.level - 1].length === this.levelInfo.getRounds().length) {
+            isNull(currentLevelLI);
+            currentLevelLI.textContent = `Level ${this.level} ✔`;
+            const completeLevelString: string | null = localStorage.getItem('completeLevel');
+            let completeLevel: number[] = [];
+            if (completeLevelString === null) {
+                completeLevel.push(this.level);
+            } else {
+                completeLevel = JSON.parse(completeLevelString);
+                if (!completeLevel.includes(this.level)) {
+                    completeLevel.push(this.level);
+                }
+            }
+            localStorage.setItem('completeLevel', JSON.stringify(completeLevel));
+        }
+    }
+
+    setRoundCompleteState() {
+        isNull(this.levelRoundContainer);
+        const currentRoundLI: HTMLLIElement | null = this.levelRoundContainer.querySelector(`#round_${this.round}`);
+        isNull(currentRoundLI);
+        currentRoundLI.textContent = `Round ${this.round + 1} ✔`;
     }
 
     showFullImage() {
