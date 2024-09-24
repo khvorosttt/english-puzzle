@@ -1,3 +1,0 @@
-{
-    "*.{ts,js,css,md}": ["npm run ci:format"]
-}
